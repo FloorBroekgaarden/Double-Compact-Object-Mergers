@@ -1,0 +1,12 @@
+*.pyc
+*.hdf5
+*.h5
+*.csv
+*.mov
+*.mp4
+*.gif
+*.log
+*.o
+*.h
+*.out
+*.aux
