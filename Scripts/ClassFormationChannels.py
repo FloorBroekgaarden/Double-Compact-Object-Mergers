@@ -103,13 +103,13 @@ class FormationChannels(object):
         for nrH, head in enumerate(columns):
             header.append(head)
         if self.verbose:
-            print 'self.header \n Sorted which columns from formation channels we use'
+            print( 'self.header \n Sorted which columns from formation channels we use')
         #overallCounter will be the dictionary tracking
         #keys   = channel
         #values = count
         overallCounter = Counter()
         if self.verbose:
-            print 'Counting/sorting the unique Channels'
+            print( 'Counting/sorting the unique Channels')
         while endChunk!= endFile:
             #Test that the last chunk ends at the proper index
             endChunk = startChunk + chunkSize
@@ -177,7 +177,7 @@ class FormationChannels(object):
 
 
         if self.verbose:
-            print 'self.sortedChannels self.sortedCounts \n Combining the counts and channels in arrays'
+            print( 'self.sortedChannels self.sortedCounts \n Combining the counts and channels in arrays')
         channels = overallCounter.keys()
         counts   = overallCounter.values()
         zippedChannelsCounts = zip(channels, counts)
@@ -200,7 +200,7 @@ class FormationChannels(object):
         print(np.sum(sortedCounts), 'sum sorted counts')
 
         if self.verbose:
-            print 'Done'
+            print( 'Done')
         return
 
 
@@ -215,7 +215,7 @@ class FormationChannels(object):
         sortedRankes = range(len(sortedTuples))
         newDict = dict(zip(sortedTuples, sortedRankes))
         if self.verbose:
-            print 'self.rankArray \n Creating column with rank of each system, patience required :)'
+            print( 'self.rankArray \n Creating column with rank of each system, patience required :)')
         tempArray = np.zeros(shape=(len(self.header), np.sum(self.booleanFilter)))
         for nrC, column in enumerate(self.header):
             tempArray[nrC] = fForm[column][...][self.booleanFilter].squeeze()
@@ -226,7 +226,7 @@ class FormationChannels(object):
         for nrR, row in enumerate(tuples):
             rankArray[nrR] = newDict[row]
         if self.verbose:
-            print 'Done :D '
+            print( 'Done :D ')
 
         self.rankArray = rankArray
         return
@@ -400,7 +400,7 @@ class FormationChannels(object):
 
     def groupSeeds(self):
         if self.verbose:
-            print 'self.sortedSeeds \n Creating array per channel with all seeds of that channel'
+            print( 'self.sortedSeeds \n Creating array per channel with all seeds of that channel')
         fForm   = self.h5file['formationChannels']
         allSeeds= fForm['m_randomSeed'][...].squeeze()[self.booleanFilter]
 
@@ -413,7 +413,7 @@ class FormationChannels(object):
         #We only want the formation cahnnels of the seeds above
         fForm   = self.h5file['formationChannels']
         if self.verbose:
-            print 'self.booleanFilter \n Looking up the seeds/systems and creating mask for formation Channels. '
+            print('self.booleanFilter \n Looking up the seeds/systems and creating mask for formation Channels. ')
         if (seeds is None) & (types is None):
             raise ValueError("Need either seeds (array) or types (string) input")
         if (seeds is not None) & (types is not None):
@@ -431,12 +431,12 @@ class FormationChannels(object):
             raise ValueError("These seeds do not exist in formation channel output")
 
         if self.verbose:
-            print "Doing the formation channels for %s systems" %(np.sum(self.booleanFilter))
+            print("Doing the formation channels for %s systems" %(np.sum(self.booleanFilter)))
         self.returnUniqueChannelsCounts()
         self.returnArrayRanks()
         self.groupSeeds()
         if self.verbose:
-            print 'self.sortedStrings \n Constructing human readable string for each of the unique Channels (Magic) '
+            print('self.sortedStrings \n Constructing human readable string for each of the unique Channels (Magic) ')
         for nrC in np.unique(self.rankArray.astype(int)):
             count      = self.sortedCounts[nrC]
             row        = self.sortedChannels[nrC]
@@ -445,8 +445,8 @@ class FormationChannels(object):
 
         
         if self.verbose:
-            print " :D :D \n finished in total we have %s channels for %s systems"\
-                    %(len(self.sortedChannels), np.sum(self.sortedCounts))
+            print(" :D :D \n finished in total we have %s channels for %s systems"\
+                    %(len(self.sortedChannels), np.sum(self.sortedCounts)))
         # if np.sum(self.sortedCounts) != np.sum(self.booleanFilter):  #//floor weights
         #     raise ValueError("number of counts %s ,  nr seeds %s, sum BooleanFilter %s,"\  #//floor weights
         #                      %(np.sum(self.sortedCounts), len(seeds), np.sum(self.booleanFilter))\  #//floor weights
