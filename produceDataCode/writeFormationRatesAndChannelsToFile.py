@@ -1,5 +1,5 @@
 
-# from __future__ import division # un comment if you use python 2 !
+from __future__ import division # un comment if you use python 2 !
 import numpy as np
 import matplotlib.pyplot as plt
 import h5py as h5
@@ -110,8 +110,8 @@ def writeFormationRatesAndChannelsToFile(DCOtype='BBH', \
             print('doing optimistic version of fiducial')
             
         # path to datafile 
-
-        path = pathCOMPASOutput+alphabetDirDict[bps_model] + '/' + 'COMPASCompactOutput_'+DCOtype+'_'+bps_model+'.h5'
+        # path = pathCOMPASOutput+alphabetDirDict[bps_model] + '/' + 'COMPASCompactOutput_'+DCOtype +'_'+bps_model+'.h5'
+        path = pathCOMPASOutput+alphabetDirDict[bps_model] + '/' + 'COMPASOutput.h5'
             
         #But I want only within Hubble time 
         Data            = CC.COMPASData(path=path, lazyData=True, Mlower=5., \
@@ -122,10 +122,7 @@ def writeFormationRatesAndChannelsToFile(DCOtype='BBH', \
         metallicities = Data.metallicitySystems
         seeds    = Data.seeds[Data.Hubble==True]
         weights = Data.weight
-            
-            
-        
-       
+
 
         
 
@@ -195,8 +192,8 @@ def writeFormationRatesAndChannelsToFile(DCOtype='BBH', \
         	# has 0 DCOs and thats what the data.metallicityGrid is based on         	
         	if Z in Data.metallicityGrid:
 	            maskZ = (metallicities == Z)
-	            formationRateTotal[nrZ] = np.sum(weights[maskZ]) # //floor weights
-
+	            formationRateTotal[nrZ] = np.sum(Data.weight[maskZ]) # //floor weights
+	            # print('total 1 =',formationRateTotal[nrZ])
 	            # mask different channels
 	            InClassic       = np.in1d(seeds, seedsClassic)
 	            InOnlyStableMT  = np.in1d(seeds, seedsOnlyStableMT)
@@ -216,21 +213,33 @@ def writeFormationRatesAndChannelsToFile(DCOtype='BBH', \
 	            formationRateDoubleCE[nrZ]        = np.sum(weights[maskDoubleCE])
 	            formationRateOther[nrZ]           = np.sum(weights[maskOther])
 	        else:
+	            formationRateTotal[nrZ] 		  = 0
 	            formationRateClassic[nrZ]         = 0
 	            formationRateOnlyStableMT[nrZ]    = 0
 	            formationRateSingleCE[nrZ]        = 0
 	            formationRateDoubleCE[nrZ]        = 0
 	            formationRateOther[nrZ]           = 0        	
 	        
-        	# mask the Z that are in the grid	        
-        	maskZgridinZlist = np.in1d(listt, Data.metallicityGrid)
-
-        	formationRateTotal[maskZgridinZlist] = np.divide(formationRateTotal[maskZgridinZlist], Data.totalMassEvolvedPerZ) + 0 #lowerY        
-        	formationRateClassic[maskZgridinZlist] = np.divide(formationRateClassic[maskZgridinZlist], Data.totalMassEvolvedPerZ)
-	        formationRateOnlyStableMT[maskZgridinZlist] = np.divide(formationRateOnlyStableMT[maskZgridinZlist], Data.totalMassEvolvedPerZ)
-	        formationRateSingleCE[maskZgridinZlist] = np.divide(formationRateSingleCE[maskZgridinZlist], Data.totalMassEvolvedPerZ)
-	        formationRateDoubleCE[maskZgridinZlist] = np.divide(formationRateDoubleCE[maskZgridinZlist], Data.totalMassEvolvedPerZ)
-	        formationRateOther[maskZgridinZlist] = np.divide(formationRateOther[maskZgridinZlist], Data.totalMassEvolvedPerZ)
+    	# mask the Z that are in the grid	        
+        maskZgridinZlist = np.in1d(listt, Data.metallicityGrid)
+     #    print('----')
+     #    print(formationRateTotal[maskZgridinZlist])
+     #    print(formationRateTotal)
+    	# # print(maskZgridinZlist)
+    	# # print(listt)
+    	# # print(Data.metallicityGrid)
+    	# # print('divide=',np.divide(formationRateTotal[maskZgridinZlist], Data.totalMassEvolvedPerZ) + 0)
+    	# # print()
+     #    print('Data.totalMassEvolvedPerZ', Data.totalMassEvolvedPerZ)
+     #    print()
+     #    print('----')
+        formationRateTotal[maskZgridinZlist] = np.divide(formationRateTotal[maskZgridinZlist], Data.totalMassEvolvedPerZ) + 0 #lowerY        
+        formationRateClassic[maskZgridinZlist] = np.divide(formationRateClassic[maskZgridinZlist], Data.totalMassEvolvedPerZ)
+        formationRateOnlyStableMT[maskZgridinZlist] = np.divide(formationRateOnlyStableMT[maskZgridinZlist], Data.totalMassEvolvedPerZ)
+        formationRateSingleCE[maskZgridinZlist] = np.divide(formationRateSingleCE[maskZgridinZlist], Data.totalMassEvolvedPerZ)
+        formationRateDoubleCE[maskZgridinZlist] = np.divide(formationRateDoubleCE[maskZgridinZlist], Data.totalMassEvolvedPerZ)
+        formationRateOther[maskZgridinZlist] = np.divide(formationRateOther[maskZgridinZlist], Data.totalMassEvolvedPerZ)
+        # print('ind =', formationRateTotal[maskZgridinZlist])
 
         df = pd.read_csv('/Users/floorbroekgaarden/Projects/GitHub/Double-Compact-Object-Mergers/dataFiles/summary_data_Fig_1/formationRatesTotalAndPerChannel_'+DCOname+ '_' +  '.csv', index_col=0)
         # namez0 = bps_model +' total  [Msun^{-1}]'
