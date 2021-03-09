@@ -97,6 +97,47 @@ def layoutAxes(ax, nameX='', nameY='', \
     return ax
 
 
+def layoutAxesNoXlabel(ax, nameX='', nameY='', \
+               labelSizeMajor = 10, fontsize = 25, second=False, labelpad=None, setMinor=True):
+    """
+    Tiny code to do the layout for axes in matplotlib
+    """
+    tickLengthMajor = 10
+    tickLengthMinor = 5
+    tickWidthMajor  = 1.5
+    tickWidthMinor  = 1.5
+    
+    #rc('axes', linewidth=2)
+    #label1 always refers to first axis not the twin 
+    if not second:
+        for tick in ax.xaxis.get_major_ticks():
+            tick.label1.set_fontsize(fontsize)
+            #tick.label1.set_fontweight('bold')
+        for tick in ax.yaxis.get_major_ticks():
+            tick.label1.set_fontsize(fontsize)
+            #tick.label1.set_fontweight('bold')
+    if second:
+        for tick in ax.xaxis.get_major_ticks():
+            tick.label2.set_fontsize(fontsize)
+            #tick.label1.set_fontweight('bold')
+        for tick in ax.yaxis.get_major_ticks():
+            tick.label2.set_fontsize(fontsize)
+            #tick.label1.set_fontweight('bold')
+    for axis in ['top','bottom','left','right']:
+        ax.spines[axis].set_linewidth(1.2)
+    ax.tick_params(length=tickLengthMajor, width=tickWidthMajor, which='major')
+    ax.tick_params(length=tickLengthMinor, width=tickWidthMinor, which='minor')
+    # ax.set_xlabel(nameX, fontsize=fontsize,labelpad=labelpad)#,fontweight='bold')
+    # ax.set_ylabel(nameY, fontsize=fontsize,labelpad=labelpad)#, fontweight='bold')    
+    
+    if setMinor==True:
+        # add minor ticks:
+        ax.xaxis.set_minor_locator(AutoMinorLocator())
+        ax.yaxis.set_minor_locator(AutoMinorLocator())
+
+    return ax
+
+
 
 bbox_props = dict(boxstyle="round", fc="w", ec="0.5", alpha=0.75) # for box around text in plot
 
