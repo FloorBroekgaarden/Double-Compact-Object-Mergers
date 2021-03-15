@@ -10,3 +10,4 @@
 *.h
 *.out
 *.aux
+*.DS_Store
