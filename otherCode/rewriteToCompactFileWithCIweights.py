@@ -14,7 +14,6 @@ import sys
 
 sys.path.append('../Scripts')
 import ClassCosmicIntegrator  as CI #Given settings and redshifts returns rates (2D arrays) Loads the data
-# import coencodeVarious        as CV
 from PostProcessingScripts import * 
 
 def maskTargetDCOsSTROOPWAFEL(DCOtype, boolDCOmask, f): #, otherSelection, otherparam):
@@ -211,7 +210,7 @@ def reduceH5file(pathToData, pathToDataWithoutCOMPASname, DCOtype, optimistic, B
 
 
     #path to the data
-    pathCOMPASOutput = pathToDataWithoutCOMPASname
+    pathCOMPASOutput = pathToData #pathToDataWithoutCOMPASname
     modelname = BPSmodelName
     #Will only look at BBHs so might as well set everything
     minz = 0.
