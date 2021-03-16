@@ -121,7 +121,7 @@ import glob
 
 
 
-def makeMovie_rates(DCOtype='BHNS', bps_model='A', fps=.4, duration=300):
+def makeMovie_rates(whichRate='intrinsic', fps=.4, duration=300):
 	'''
 	whichParam = 'Initial' or 'Final'
 	fps=0.4, frames per second
@@ -160,9 +160,9 @@ def makeMovie_rates(DCOtype='BHNS', bps_model='A', fps=.4, duration=300):
 	if whichRate=='intrinsic':
 		for ind_m, SFRD_model in enumerate(MSSFRnameslist):
 			images.append(image_folder +   'Rates_intrinsic_'  + SFRD_model + '.png')
-	elif whichRate=='observed'
+	elif whichRate=='observed':
 		for ind_m, SFRD_model in enumerate(MSSFRnameslist):
-		images.append(image_folder +   'Rates_observed_'  + SFRD_model + '.png')
+			images.append(image_folder +   'Rates_observed_'  + SFRD_model + '.png')
 
 
 	image_files = images
@@ -199,5 +199,5 @@ makeMovie_intrinsicRates=True
 
 
 if makeMovie_intrinsicRates==True:
-	makeMovie_rates()
+	makeMovie_rates(whichRate='intrinsic')
 
