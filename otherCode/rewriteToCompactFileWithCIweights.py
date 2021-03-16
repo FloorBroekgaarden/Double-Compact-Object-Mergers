@@ -221,8 +221,8 @@ def reduceH5file(pathToData, pathToDataWithoutCOMPASname, DCOtype, optimistic, B
         maxz = .25
         resz = 100 # change to 100 //floor 
     elif DCOtype=='BBH': 
-        maxz = 1.5
-        resz = 250 # change to 100 //floor 
+        maxz = 2.5
+        resz = 100 # change to 100 //floor 
     Data = CI.CosmicIntegrator(COMPASpath = pathCOMPASOutput, DCOtypes=DCOtype,\
            minRedshift=minz,   maxRedshift=maxz, nrRedshiftBins=resz, optimistic=optimistic, Cosmology='WMAP', COMPASbinaryFraction=1.0)
 
@@ -375,7 +375,7 @@ def reduceH5file(pathToData, pathToDataWithoutCOMPASname, DCOtype, optimistic, B
 
 
 
-# for DCOtype in ['BNS']:
+# for DCOtype in ['BBH']:
 
 #     pathToData = '/Volumes/Andromeda/DATA/AllDCO_bugfix/fiducial/COMPASOutput.h5'
 #     pathToDataWithoutCOMPASname = '/Volumes/Andromeda/DATA/AllDCO_bugfix/fiducial/'
@@ -396,7 +396,7 @@ def reduceH5file(pathToData, pathToDataWithoutCOMPASname, DCOtype, optimistic, B
 
 
 
-for DCOtype in ['BNS']:
+for DCOtype in ['BBH']:
     pathToData = '/Volumes/Andromeda/DATA/AllDCO_bugfix/massTransferEfficiencyFixed_0_25/COMPASOutput.h5'
     pathToDataWithoutCOMPASname = '/Volumes/Andromeda/DATA/AllDCO_bugfix/massTransferEfficiencyFixed_0_25/'
     optimistic=int(0)
@@ -410,7 +410,7 @@ for DCOtype in ['BNS']:
     reduceH5file(pathToData=pathToData, pathToDataWithoutCOMPASname=pathToDataWithoutCOMPASname, DCOtype=DCOtype, optimistic=optimistic, BPSmodelName=BPSmodelName)
 
 
-for DCOtype in ['BNS']:
+for DCOtype in ['BBH']:
     pathToData = '/Volumes/Andromeda/DATA/AllDCO_bugfix/massTransferEfficiencyFixed_0_5/COMPASOutput.h5'
     pathToDataWithoutCOMPASname = '/Volumes/Andromeda/DATA/AllDCO_bugfix/massTransferEfficiencyFixed_0_5/'
     optimistic=int(0)
@@ -424,7 +424,7 @@ for DCOtype in ['BNS']:
     reduceH5file(pathToData=pathToData, pathToDataWithoutCOMPASname=pathToDataWithoutCOMPASname, DCOtype=DCOtype, optimistic=optimistic, BPSmodelName=BPSmodelName)
 
 
-for DCOtype in ['BNS']:
+for DCOtype in ['BBH']:
     pathToData = '/Volumes/Andromeda/DATA/AllDCO_bugfix/massTransferEfficiencyFixed_0_75/COMPASOutput.h5'
     pathToDataWithoutCOMPASname = '/Volumes/Andromeda/DATA/AllDCO_bugfix/massTransferEfficiencyFixed_0_75/'
     optimistic=int(0)
@@ -439,7 +439,7 @@ for DCOtype in ['BNS']:
 
 
 
-for DCOtype in ['BNS']:
+for DCOtype in ['BBH']:
 
     pathToData = '/Volumes/Andromeda/DATA/AllDCO_bugfix/unstableCaseBB/COMPASOutput.h5'
     pathToDataWithoutCOMPASname = '/Volumes/Andromeda/DATA/AllDCO_bugfix/unstableCaseBB/'
@@ -454,7 +454,7 @@ for DCOtype in ['BNS']:
     reduceH5file(pathToData=pathToData, pathToDataWithoutCOMPASname=pathToDataWithoutCOMPASname, DCOtype=DCOtype, optimistic=optimistic, BPSmodelName=BPSmodelName)
 
 
-for DCOtype in ['BNS']:
+for DCOtype in ['BBH']:
 
     pathToData = '/Volumes/Andromeda/DATA/AllDCO_bugfix/alpha0_5/COMPASOutput.h5'
     pathToDataWithoutCOMPASname = '/Volumes/Andromeda/DATA/AllDCO_bugfix/alpha0_5/'
@@ -470,7 +470,7 @@ for DCOtype in ['BNS']:
 
 
 
-for DCOtype in ['BNS']:
+for DCOtype in ['BBH']:
 
     pathToData = '/Volumes/Andromeda/DATA/AllDCO_bugfix/alpha2_0/COMPASOutput.h5'
     pathToDataWithoutCOMPASname = '/Volumes/Andromeda/DATA/AllDCO_bugfix/alpha2_0/'
@@ -486,7 +486,7 @@ for DCOtype in ['BNS']:
 
 
 
-for DCOtype in [ 'BNS']:
+for DCOtype in ['BBH']:
 
     pathToData = '/Volumes/Andromeda/DATA/AllDCO_bugfix/fiducial/COMPASOutput.h5'
     pathToDataWithoutCOMPASname = '/Volumes/Andromeda/DATA/AllDCO_bugfix/fiducial/'
@@ -501,7 +501,7 @@ for DCOtype in [ 'BNS']:
     reduceH5file(pathToData=pathToData, pathToDataWithoutCOMPASname=pathToDataWithoutCOMPASname, DCOtype=DCOtype, optimistic=optimistic, BPSmodelName=BPSmodelName)
 
 
-for DCOtype in ['BNS']:
+for DCOtype in ['BBH']:
 
     pathToData = '/Volumes/Andromeda/DATA/AllDCO_bugfix/rapid/COMPASOutput.h5'
     pathToDataWithoutCOMPASname = '/Volumes/Andromeda/DATA/AllDCO_bugfix/rapid/'
@@ -517,7 +517,7 @@ for DCOtype in ['BNS']:
 
 
 
-for DCOtype in ['BNS']:
+for DCOtype in ['BBH']:
 
     pathToData = '/Volumes/Andromeda/DATA/AllDCO_bugfix/maxNSmass2_0/COMPASOutput.h5'
     pathToDataWithoutCOMPASname = '/Volumes/Andromeda/DATA/AllDCO_bugfix/maxNSmass2_0/'
@@ -533,7 +533,7 @@ for DCOtype in ['BNS']:
 
 
 
-for DCOtype in ['BNS']:
+for DCOtype in ['BBH']:
 
     pathToData = '/Volumes/Andromeda/DATA/AllDCO_bugfix/maxNSmass3_0/COMPASOutput.h5'
     pathToDataWithoutCOMPASname = '/Volumes/Andromeda/DATA/AllDCO_bugfix/maxNSmass3_0/'
@@ -548,7 +548,7 @@ for DCOtype in ['BNS']:
     reduceH5file(pathToData=pathToData, pathToDataWithoutCOMPASname=pathToDataWithoutCOMPASname, DCOtype=DCOtype, optimistic=optimistic, BPSmodelName=BPSmodelName)
 
 
-for DCOtype in ['BNS']:
+for DCOtype in ['BBH']:
 
     pathToData = '/Volumes/Andromeda/DATA/AllDCO_bugfix/noPISN/COMPASOutput.h5'
     pathToDataWithoutCOMPASname = '/Volumes/Andromeda/DATA/AllDCO_bugfix/noPISN/'
@@ -564,7 +564,7 @@ for DCOtype in ['BNS']:
 
 
 
-for DCOtype in ['BNS']:
+for DCOtype in ['BBH']:
 
     pathToData = '/Volumes/Andromeda/DATA/AllDCO_bugfix/ccSNkick_100km_s/COMPASOutput.h5'
     pathToDataWithoutCOMPASname = '/Volumes/Andromeda/DATA/AllDCO_bugfix/ccSNkick_100km_s/'
@@ -578,7 +578,7 @@ for DCOtype in ['BNS']:
 
     reduceH5file(pathToData=pathToData, pathToDataWithoutCOMPASname=pathToDataWithoutCOMPASname, DCOtype=DCOtype, optimistic=optimistic, BPSmodelName=BPSmodelName)
 
-for DCOtype in ['BNS']:
+for DCOtype in ['BBH']:
 
     pathToData = '/Volumes/Andromeda/DATA/AllDCO_bugfix/ccSNkick_30km_s/COMPASOutput.h5'
     pathToDataWithoutCOMPASname = '/Volumes/Andromeda/DATA/AllDCO_bugfix/ccSNkick_30km_s/'
@@ -592,7 +592,7 @@ for DCOtype in ['BNS']:
 
     reduceH5file(pathToData=pathToData, pathToDataWithoutCOMPASname=pathToDataWithoutCOMPASname, DCOtype=DCOtype, optimistic=optimistic, BPSmodelName=BPSmodelName)
 
-for DCOtype in ['BNS']:
+for DCOtype in ['BBH']:
 
     pathToData = '/Volumes/Andromeda/DATA/AllDCO_bugfix/noBHkick/COMPASOutput.h5'
     pathToDataWithoutCOMPASname = '/Volumes/Andromeda/DATA/AllDCO_bugfix/noBHkick/'
