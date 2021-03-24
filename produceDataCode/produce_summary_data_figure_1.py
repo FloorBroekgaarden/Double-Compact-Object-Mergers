@@ -1,5 +1,5 @@
 
-from __future__ import division # un comment if you use python 2 !
+# from __future__ import division # un comment if you use python 2 !
 import numpy as np
 import matplotlib.pyplot as plt
 import h5py as h5
@@ -222,24 +222,13 @@ def writeFormationRatesAndChannelsToFile(DCOtype='BBH', \
 	        
     	# mask the Z that are in the grid	        
         maskZgridinZlist = np.in1d(listt, Data.metallicityGrid)
-     #    print('----')
-     #    print(formationRateTotal[maskZgridinZlist])
-     #    print(formationRateTotal)
-    	# # print(maskZgridinZlist)
-    	# # print(listt)
-    	# # print(Data.metallicityGrid)
-    	# # print('divide=',np.divide(formationRateTotal[maskZgridinZlist], Data.totalMassEvolvedPerZ) + 0)
-    	# # print()
-     #    print('Data.totalMassEvolvedPerZ', Data.totalMassEvolvedPerZ)
-     #    print()
-     #    print('----')
+
         formationRateTotal[maskZgridinZlist] = np.divide(formationRateTotal[maskZgridinZlist], Data.totalMassEvolvedPerZ) + 0 #lowerY        
         formationRateClassic[maskZgridinZlist] = np.divide(formationRateClassic[maskZgridinZlist], Data.totalMassEvolvedPerZ)
         formationRateOnlyStableMT[maskZgridinZlist] = np.divide(formationRateOnlyStableMT[maskZgridinZlist], Data.totalMassEvolvedPerZ)
         formationRateSingleCE[maskZgridinZlist] = np.divide(formationRateSingleCE[maskZgridinZlist], Data.totalMassEvolvedPerZ)
         formationRateDoubleCE[maskZgridinZlist] = np.divide(formationRateDoubleCE[maskZgridinZlist], Data.totalMassEvolvedPerZ)
         formationRateOther[maskZgridinZlist] = np.divide(formationRateOther[maskZgridinZlist], Data.totalMassEvolvedPerZ)
-        # print('ind =', formationRateTotal[maskZgridinZlist])
 
         df = pd.read_csv('/Users/floorbroekgaarden/Projects/GitHub/Double-Compact-Object-Mergers/dataFiles/summary_data_Fig_1/formationRatesTotalAndPerChannel_'+DCOname+ '_' +  '.csv', index_col=0)
         # namez0 = bps_model +' total  [Msun^{-1}]'
@@ -276,19 +265,20 @@ import string
 INITIALIZE=True
 
 if INITIALIZE == True:
-    createEmptyCSVplaceholder(DCOtype='BHNS', nBPSmodels=15)
-    createEmptyCSVplaceholder(DCOtype='BNS', nBPSmodels=15)
-    createEmptyCSVplaceholder(DCOtype='BBH', nBPSmodels=15)
+    createEmptyCSVplaceholder(DCOtype='BHNS', nBPSmodels=17)
+    createEmptyCSVplaceholder(DCOtype='BNS',  nBPSmodels=17)
+    createEmptyCSVplaceholder(DCOtype='BBH',  nBPSmodels=17)
 
 
 print('do not forget to first Initialize if this is the first time you run this script')
 
-nModels=15
-BPSnameslist = list(string.ascii_uppercase)[0:nModels]
-modelDirList = ['fiducial', 'massTransferEfficiencyFixed_0_25', 'massTransferEfficiencyFixed_0_5', 'massTransferEfficiencyFixed_0_75', \
-               'unstableCaseBB', 'alpha0_5', 'alpha2_0', 'fiducial', 'rapid', 'maxNSmass2_0', 'maxNSmass3_0', 'noPISN',  'ccSNkick_100km_s', 'ccSNkick_30km_s', 'noBHkick' ]
 
-alphabetDirDict =  {BPSnameslist[i]: modelDirList[i] for i in range(len(BPSnameslist))}
+# The things below are imported from PostProcessing.py
+# nModels=17
+# BPSnameslist = list(string.ascii_uppercase)[0:nModels]
+# modelDirList = ['fiducial', 'massTransferEfficiencyFixed_0_25', 'massTransferEfficiencyFixed_0_5', 'massTransferEfficiencyFixed_0_75', \
+#                'unstableCaseBB', 'alpha0_5', 'alpha2_0', 'fiducial', 'rapid', 'maxNSmass2_0', 'maxNSmass3_0', 'noPISN',  'ccSNkick_100km_s', 'ccSNkick_30km_s', 'noBHkick', 'wolf_rayet_multiplier_0_1', 'wolf_rayet_multiplier_5' ]
+# alphabetDirDict =  {BPSnameslist[i]: modelDirList[i] for i in range(len(BPSnameslist))}
 
 
 writeFormationRatesAndChannelsToFile(DCOtype='BHNS', \
