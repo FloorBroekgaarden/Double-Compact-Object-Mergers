@@ -191,6 +191,13 @@ zorderlist = { 'classic':10, 'stable B no CEE':13, \
 
 
 # default settings for labels and names of BPS models 
+
+
+
+DCOname_dict = {'BHNS':'BHNS', 'BBH':'BHBH', 'BNS':'NSNS'}
+    
+
+
 nModels=17
 BPSnameslist = list(string.ascii_uppercase)[0:nModels]
 modelDirList = ['fiducial', 'massTransferEfficiencyFixed_0_25', 'massTransferEfficiencyFixed_0_5', 'massTransferEfficiencyFixed_0_75', \
@@ -864,9 +871,7 @@ for ind_GSMF, GSMF in enumerate(GSMFs):
 
 DCOTypeList = ['BHBH', 'BHNS', 'NSNS']
 
-NumberBPSmodels=15
-alphabet = list(string.ascii_uppercase)
-BPSnameslist = alphabet[:NumberBPSmodels]
+
 
 
 # GW stuff
