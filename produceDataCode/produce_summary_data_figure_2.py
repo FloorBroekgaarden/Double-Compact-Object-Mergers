@@ -76,14 +76,14 @@ def writeToRatesFile_Mejecta(BPSmodelName='Z'):
 
 
 
-	# path for files 
+	# # path for files 
 	path_dir = '/Volumes/Andromeda/DATA/AllDCO_bugfix/'
-	nModels=15
-	BPSnameslist = list(string.ascii_uppercase)[0:nModels]
-	modelDirList = ['fiducial', 'massTransferEfficiencyFixed_0_25', 'massTransferEfficiencyFixed_0_5', 'massTransferEfficiencyFixed_0_75', \
-	               'unstableCaseBB', 'alpha0_5', 'alpha2_0', 'fiducial', 'rapid', 'maxNSmass2_0', 'maxNSmass3_0', 'noPISN',  'ccSNkick_100km_s', 'ccSNkick_30km_s', 'noBHkick' ]
+	# nModels=15
+	# BPSnameslist = list(string.ascii_uppercase)[0:nModels]
+	# modelDirList = ['fiducial', 'massTransferEfficiencyFixed_0_25', 'massTransferEfficiencyFixed_0_5', 'massTransferEfficiencyFixed_0_75', \
+	#                'unstableCaseBB', 'alpha0_5', 'alpha2_0', 'fiducial', 'rapid', 'maxNSmass2_0', 'maxNSmass3_0', 'noPISN',  'ccSNkick_100km_s', 'ccSNkick_30km_s', 'noBHkick' ]
 
-	alphabetDirDict =  {BPSnameslist[i]: modelDirList[i] for i in range(len(BPSnameslist))}
+	# alphabetDirDict =  {BPSnameslist[i]: modelDirList[i] for i in range(len(BPSnameslist))}
 
 
 
@@ -125,7 +125,6 @@ def writeToRatesFile_Mejecta(BPSmodelName='Z'):
 
 	fparam_intrinsic = 'weights_intrinsic'
 	# get detected weights
-
 	fparam_detected = 'weights_detected'
 
 
@@ -219,12 +218,12 @@ def writeToRatesFile_GENERAL(BPSmodelName='Z', DCOtype='BHNS'):
 
 	# path for files 
 	path_dir = '/Volumes/Andromeda/DATA/AllDCO_bugfix/'
-	nModels=15
-	BPSnameslist = list(string.ascii_uppercase)[0:nModels]
-	modelDirList = ['fiducial', 'massTransferEfficiencyFixed_0_25', 'massTransferEfficiencyFixed_0_5', 'massTransferEfficiencyFixed_0_75', \
-	               'unstableCaseBB', 'alpha0_5', 'alpha2_0', 'fiducial', 'rapid', 'maxNSmass2_0', 'maxNSmass3_0', 'noPISN',  'ccSNkick_100km_s', 'ccSNkick_30km_s', 'noBHkick' ]
+	# nModels=15
+	# BPSnameslist = list(string.ascii_uppercase)[0:nModels]
+	# modelDirList = ['fiducial', 'massTransferEfficiencyFixed_0_25', 'massTransferEfficiencyFixed_0_5', 'massTransferEfficiencyFixed_0_75', \
+	#                'unstableCaseBB', 'alpha0_5', 'alpha2_0', 'fiducial', 'rapid', 'maxNSmass2_0', 'maxNSmass3_0', 'noPISN',  'ccSNkick_100km_s', 'ccSNkick_30km_s', 'noBHkick' ]
 
-	alphabetDirDict =  {BPSnameslist[i]: modelDirList[i] for i in range(len(BPSnameslist))}
+	# alphabetDirDict =  {BPSnameslist[i]: modelDirList[i] for i in range(len(BPSnameslist))}
 
 
 
@@ -324,12 +323,12 @@ def writeToRatesFile_FormationChannels(BPSmodelName='Z', DCOtype='BHNS'):
 
 	# path for files 
 	path_dir = '/Volumes/Andromeda/DATA/AllDCO_bugfix/'
-	nModels=15
-	BPSnameslist = list(string.ascii_uppercase)[0:nModels]
-	modelDirList = ['fiducial', 'massTransferEfficiencyFixed_0_25', 'massTransferEfficiencyFixed_0_5', 'massTransferEfficiencyFixed_0_75', \
-	               'unstableCaseBB', 'alpha0_5', 'alpha2_0', 'fiducial', 'rapid', 'maxNSmass2_0', 'maxNSmass3_0', 'noPISN',  'ccSNkick_100km_s', 'ccSNkick_30km_s', 'noBHkick' ]
+	# nModels=15
+	# BPSnameslist = list(string.ascii_uppercase)[0:nModels]
+	# modelDirList = ['fiducial', 'massTransferEfficiencyFixed_0_25', 'massTransferEfficiencyFixed_0_5', 'massTransferEfficiencyFixed_0_75', \
+	#                'unstableCaseBB', 'alpha0_5', 'alpha2_0', 'fiducial', 'rapid', 'maxNSmass2_0', 'maxNSmass3_0', 'noPISN',  'ccSNkick_100km_s', 'ccSNkick_30km_s', 'noBHkick' ]
 
-	alphabetDirDict =  {BPSnameslist[i]: modelDirList[i] for i in range(len(BPSnameslist))}
+	# alphabetDirDict =  {BPSnameslist[i]: modelDirList[i] for i in range(len(BPSnameslist))}
 
 
 
@@ -533,12 +532,12 @@ def writeToRatesFile_NSBH(BPSmodelName='Z'):
 
 	# path for files 
 	path_dir = '/Volumes/Andromeda/DATA/AllDCO_bugfix/'
-	nModels=15
-	BPSnameslist = list(string.ascii_uppercase)[0:nModels]
-	modelDirList = ['fiducial', 'massTransferEfficiencyFixed_0_25', 'massTransferEfficiencyFixed_0_5', 'massTransferEfficiencyFixed_0_75', \
-	               'unstableCaseBB', 'alpha0_5', 'alpha2_0', 'fiducial', 'rapid', 'maxNSmass2_0', 'maxNSmass3_0', 'noPISN',  'ccSNkick_100km_s', 'ccSNkick_30km_s', 'noBHkick' ]
+	# nModels=15
+	# BPSnameslist = list(string.ascii_uppercase)[0:nModels]
+	# modelDirList = ['fiducial', 'massTransferEfficiencyFixed_0_25', 'massTransferEfficiencyFixed_0_5', 'massTransferEfficiencyFixed_0_75', \
+	#                'unstableCaseBB', 'alpha0_5', 'alpha2_0', 'fiducial', 'rapid', 'maxNSmass2_0', 'maxNSmass3_0', 'noPISN',  'ccSNkick_100km_s', 'ccSNkick_30km_s', 'noBHkick' ]
 
-	alphabetDirDict =  {BPSnameslist[i]: modelDirList[i] for i in range(len(BPSnameslist))}
+	# alphabetDirDict =  {BPSnameslist[i]: modelDirList[i] for i in range(len(BPSnameslist))}
 
 	path_ = path_dir
 	path_ = path_ + alphabetDirDict[BPSmodelName] +'/'
@@ -801,7 +800,7 @@ runGeneralNSNS = True
 
 
 if runMejecta ==True:
-	for BPS in  ['A','B',  'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O' ]:
+	for BPS in  ['A','B',  'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q' ]:
 		print(BPS)
 		for DCOtype in ['BHNS']:
 			print('at DCOtype =', DCOtype)
@@ -820,7 +819,7 @@ if runFormationChannels ==True:
 	# 		print('done with ', BPS)
 
 
-	for BPS in  [ 'O' ]:
+	for BPS in  ['A','B',  'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q' ]:
 		print(BPS)
 		for DCOtype in ['BBH']:
 			print('at DCOtype =', DCOtype)
@@ -828,7 +827,7 @@ if runFormationChannels ==True:
 			print('done with ', BPS)
 
 if runNSBH ==True:
-	for BPS in  ['A','B',  'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O' ]:
+	for BPS in ['A','B',  'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q' ]:
 		print(BPS)
 		for DCOtype in ['BHNS']:
 			print('at DCOtype =', DCOtype)
@@ -839,7 +838,7 @@ if runNSBH ==True:
 
 
 if runGeneralBHNS ==True:
-	for BPS in  ['A','B',  'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O' ]:
+	for BPS in ['A','B',  'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q' ]:
 		print(BPS)
 		for DCOtype in ['BHNS']:
 			print('at DCOtype =', DCOtype)
@@ -848,7 +847,7 @@ if runGeneralBHNS ==True:
 
 
 if runGeneralNSNS ==True:
-	for BPS in  ['A','B',  'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O' ]:
+	for BPS in  ['A','B',  'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q' ]:
 		print(BPS)
 		for DCOtype in ['BBH']:
 			print('at DCOtype =', DCOtype)
@@ -856,7 +855,7 @@ if runGeneralNSNS ==True:
 			print('done with ', BPS)
 
 if runGeneralBHBH ==True:
-	for BPS in  ['A','B',  'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O' ]:
+	for BPS in  ['A','B',  'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q' ]:
 		print(BPS)
 		for DCOtype in ['BNS']:
 			print('at DCOtype =', DCOtype)
