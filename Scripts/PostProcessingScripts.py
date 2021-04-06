@@ -214,6 +214,7 @@ physicalNamesBPSmodels = [r'\textbf{fiducial}',\
                           r'\textbf{no PISN}', r'\textbf{SN} '+ r'$\sigma_{\rm{rms}}^{\rm{1D}}=100\,\rm{km}\,\rm{s}^{-1}$',r'\textbf{SN} '+ r'$\sigma_{\rm{rms}}^{\rm{1D}}=30\,\rm{km}\,\rm{s}^{-1}$',\
                           r'\textbf{SN} '+ r'$v_{\rm{k,BH}}=0\,\rm{km}\,\rm{s}^{-1}$', r'$\rm{f}_{\rm{WR}} = 0.1$', r'$\rm{f}_{\rm{WR}} = 5$' ]
 
+DCOtypeColorsDict = {'BHNS':'#66c2a5', 'BHBH':'#8da0cb', 'BBH':'#8da0cb', 'NSNS':'#fc8d62', 'BNS':'#fc8d62'}
 
 
 alphabetPhysicalNameDict =  {BPSnameslist[i]: physicalNamesBPSmodels[i] for i in range(len(BPSnameslist))}
