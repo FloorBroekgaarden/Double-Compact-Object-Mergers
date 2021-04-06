@@ -195,7 +195,7 @@ def calculateConfidenceIntervals(BPSmodelName='A', MSSFRnameslist=MSSFRnameslist
 
 
 pathQuantiles = '/Users/floorbroekgaarden/Projects/GitHub/Double-Compact-Object-Mergers/dataFiles/summary_data_Fig_4_5_6/'
-for DCOtype in ['BBH', 'BNS']:
+for DCOtype in ['BBH', 'BNS', 'BHNS']:
     print('---------------------------')
     print('---------------------------')
     print('---------------------------')
