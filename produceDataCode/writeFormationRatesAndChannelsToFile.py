@@ -1,4 +1,11 @@
 
+######################
+#  This file writes the csv files that has the formation yield per metallicity
+#  and per formation channel, for the 5 formation channels (and then also the total which is the sum of the channels)
+#  used to make those formation yield plots. 
+#
+########################
+
 from __future__ import division # un comment if you use python 2 !
 import numpy as np
 import matplotlib.pyplot as plt
