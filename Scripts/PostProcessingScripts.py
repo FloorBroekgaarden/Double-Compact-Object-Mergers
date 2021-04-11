@@ -139,7 +139,7 @@ def layoutAxesNoXandYlabel(ax, nameX='', nameY='', \
 
 
 def layoutAxesNoXlabel(ax, nameX='', nameY='', \
-               labelSizeMajor = 10, fontsize = 25, second=False, labelpad=None, setMinor=True):
+               labelSizeMajor = 10, fontsize = 25, second=False, labelpad=None, setMinor=True, rotation=90):
     """
     Tiny code to do the layout for axes in matplotlib
     """
@@ -169,8 +169,11 @@ def layoutAxesNoXlabel(ax, nameX='', nameY='', \
     ax.tick_params(length=tickLengthMajor, width=tickWidthMajor, which='major')
     ax.tick_params(length=tickLengthMinor, width=tickWidthMinor, which='minor')
     # ax.set_xlabel(nameX, fontsize=fontsize,labelpad=labelpad)#,fontweight='bold')
-    ax.set_ylabel(nameY, fontsize=fontsize,labelpad=labelpad)#, fontweight='bold')    
-    
+    ax.set_ylabel(nameY, fontsize=fontsize,labelpad=labelpad, rotation=rotation, va="center")#, fontweight='bold')    
+
+
+
+
     if setMinor==True:
         # add minor ticks:
         ax.xaxis.set_minor_locator(AutoMinorLocator())
@@ -180,8 +183,11 @@ def layoutAxesNoXlabel(ax, nameX='', nameY='', \
 
 
 
+
+
+
 def layoutAxesNoYlabel(ax, nameX='', nameY='', \
-               labelSizeMajor = 10, fontsize = 25, second=False, labelpad=None, setMinor=True):
+               labelSizeMajor = 10, fontsize = 25, second=False, labelpad=None, setMinor=True, rotation=0):
     """
     Tiny code to do the layout for axes in matplotlib
     """
@@ -210,7 +216,7 @@ def layoutAxesNoYlabel(ax, nameX='', nameY='', \
         ax.spines[axis].set_linewidth(1.2)
     ax.tick_params(length=tickLengthMajor, width=tickWidthMajor, which='major')
     ax.tick_params(length=tickLengthMinor, width=tickWidthMinor, which='minor')
-    ax.set_xlabel(nameX, fontsize=fontsize,labelpad=labelpad)#,fontweight='bold')
+    ax.set_xlabel(nameX, fontsize=fontsize,labelpad=labelpad, rotation=rotation, va="center")#,fontweight='bold')
     # ax.set_ylabel(nameY, fontsize=fontsize,labelpad=labelpad)#, fontweight='bold')    
     
     if setMinor==True:
