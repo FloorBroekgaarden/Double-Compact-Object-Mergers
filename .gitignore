@@ -1,5 +1,5 @@
 *.pyc
-*.hdf5
+# *.hdf5
 # *.h5
 *.csv
 *.mov
