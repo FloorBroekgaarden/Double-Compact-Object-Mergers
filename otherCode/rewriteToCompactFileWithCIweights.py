@@ -410,18 +410,18 @@ def reduceH5file(pathToData, pathToDataWithoutCOMPASname, DCOtype, optimistic, B
 #     reduceH5file(pathToData=pathToData, pathToDataWithoutCOMPASname=pathToDataWithoutCOMPASname, DCOtype=DCOtype, optimistic=optimistic, BPSmodelName=BPSmodelName)
 
 
-for DCOtype in ['BNS']:
-    pathToData = '/Volumes/Andromeda/DATA/AllDCO_bugfix/massTransferEfficiencyFixed_0_5/COMPASOutput.h5'
-    pathToDataWithoutCOMPASname = '/Volumes/Andromeda/DATA/AllDCO_bugfix/massTransferEfficiencyFixed_0_5/'
-    optimistic=int(0)
-    BPSmodelName = 'C'
-    print()
-    print('-------------------------------------------------------')
-    print(' now at ', DCOtype, 'running for modelname', BPSmodelName)
-    print('which is in this directory', pathToDataWithoutCOMPASname)
-    print('optimistic = ', optimistic)
+# for DCOtype in ['BNS']:
+#     pathToData = '/Volumes/Andromeda/DATA/AllDCO_bugfix/massTransferEfficiencyFixed_0_5/COMPASOutput.h5'
+#     pathToDataWithoutCOMPASname = '/Volumes/Andromeda/DATA/AllDCO_bugfix/massTransferEfficiencyFixed_0_5/'
+#     optimistic=int(0)
+#     BPSmodelName = 'C'
+#     print()
+#     print('-------------------------------------------------------')
+#     print(' now at ', DCOtype, 'running for modelname', BPSmodelName)
+#     print('which is in this directory', pathToDataWithoutCOMPASname)
+#     print('optimistic = ', optimistic)
 
-    reduceH5file(pathToData=pathToData, pathToDataWithoutCOMPASname=pathToDataWithoutCOMPASname, DCOtype=DCOtype, optimistic=optimistic, BPSmodelName=BPSmodelName)
+#     reduceH5file(pathToData=pathToData, pathToDataWithoutCOMPASname=pathToDataWithoutCOMPASname, DCOtype=DCOtype, optimistic=optimistic, BPSmodelName=BPSmodelName)
 
 
 # for DCOtype in ['BBH']:
@@ -454,6 +454,22 @@ for DCOtype in ['BNS']:
 #     reduceH5file(pathToData=pathToData, pathToDataWithoutCOMPASname=pathToDataWithoutCOMPASname, DCOtype=DCOtype, optimistic=optimistic, BPSmodelName=BPSmodelName)
 
 
+# for DCOtype in ['BNS', 'BHNS']:
+
+#     pathToData = '/Volumes/Andromeda/DATA/AllDCO_bugfix/unstableCaseBB/COMPASOutput.h5'
+#     pathToDataWithoutCOMPASname = '/Volumes/Andromeda/DATA/AllDCO_bugfix/unstableCaseBB/'
+#     optimistic=int(1)
+#     BPSmodelName = 'F'
+#     print()
+#     print('-------------------------------------------------------')
+#     print(' now at ', DCOtype, 'running for modelname', BPSmodelName)
+#     print('which is in this directory', pathToDataWithoutCOMPASname)
+#     print('optimistic = ', optimistic)
+
+#     reduceH5file(pathToData=pathToData, pathToDataWithoutCOMPASname=pathToDataWithoutCOMPASname, DCOtype=DCOtype, optimistic=optimistic, BPSmodelName=BPSmodelName)
+
+
+
 # for DCOtype in ['BBH']:
 
 #     pathToData = '/Volumes/Andromeda/DATA/AllDCO_bugfix/alpha0_5/COMPASOutput.h5'
@@ -467,6 +483,40 @@ for DCOtype in ['BNS']:
 #     print('optimistic = ', optimistic)
 
 #     reduceH5file(pathToData=pathToData, pathToDataWithoutCOMPASname=pathToDataWithoutCOMPASname, DCOtype=DCOtype, optimistic=optimistic, BPSmodelName=BPSmodelName)
+
+
+
+
+
+# for DCOtype in ['BNS', 'BHNS', 'BBH']:
+
+#     pathToData = '/Volumes/Andromeda/DATA/AllDCO_bugfix/alpha0_1/COMPASOutput.h5'
+#     pathToDataWithoutCOMPASname = '/Volumes/Andromeda/DATA/AllDCO_bugfix/alpha0_1/'
+#     optimistic=int(0)
+#     BPSmodelName = 'G'
+#     print()
+#     print('-------------------------------------------------------')
+#     print(' now at ', DCOtype, 'running for modelname', BPSmodelName)
+#     print('which is in this directory', pathToDataWithoutCOMPASname)
+#     print('optimistic = ', optimistic)
+
+#     reduceH5file(pathToData=pathToData, pathToDataWithoutCOMPASname=pathToDataWithoutCOMPASname, DCOtype=DCOtype, optimistic=optimistic, BPSmodelName=BPSmodelName)
+
+
+
+for DCOtype in ['BBH']: #, 'BBH']:
+
+    pathToData = '/Volumes/Andromeda/DATA/AllDCO_bugfix/alpha10/COMPASOutput.h5'
+    pathToDataWithoutCOMPASname = '/Volumes/Andromeda/DATA/AllDCO_bugfix/alpha10/'
+    optimistic=int(0)
+    BPSmodelName = 'J'
+    print()
+    print('-------------------------------------------------------')
+    print(' now at ', DCOtype, 'running for modelname', BPSmodelName)
+    print('which is in this directory', pathToDataWithoutCOMPASname)
+    print('optimistic = ', optimistic)
+
+    reduceH5file(pathToData=pathToData, pathToDataWithoutCOMPASname=pathToDataWithoutCOMPASname, DCOtype=DCOtype, optimistic=optimistic, BPSmodelName=BPSmodelName)
 
 
 
