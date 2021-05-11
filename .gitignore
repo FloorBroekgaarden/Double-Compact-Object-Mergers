@@ -1,6 +1,6 @@
 *.pyc
 *.hdf5
-*.h5
+# *.h5
 *.csv
 *.mov
 *.mp4
