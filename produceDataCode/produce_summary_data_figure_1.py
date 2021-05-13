@@ -277,13 +277,16 @@ def writeFormationRatesAndChannelsToFile(DCOtype='BBH', \
 import string
 
 
+
+print('number of Models = ', nModels)
+
 # if you run this script for the first time, please run this by setting INITIALIZE = True
 INITIALIZE=True
 
 if INITIALIZE == True:
-	createEmptyCSVplaceholder(DCOtype='BHNS', nBPSmodels=17)
-	createEmptyCSVplaceholder(DCOtype='BNS',  nBPSmodels=17)
-	createEmptyCSVplaceholder(DCOtype='BBH',  nBPSmodels=17)
+	createEmptyCSVplaceholder(DCOtype='BHNS', nBPSmodels=nModels)
+	createEmptyCSVplaceholder(DCOtype='BNS',  nBPSmodels=nModels)
+	createEmptyCSVplaceholder(DCOtype='BBH',  nBPSmodels=nModels)
 
 
 print('do not forget to first Initialize if this is the first time you run this script')
