@@ -287,7 +287,7 @@ DCOname_dict = {'BHNS':'BHNS', 'BBH':'BHBH', 'BNS':'NSNS'}
     
 
 
-nModels=20
+nModels=20 # 
 BPSnameslist = list(string.ascii_uppercase)[0:nModels]
 modelDirList = ['fiducial', 'massTransferEfficiencyFixed_0_25', 'massTransferEfficiencyFixed_0_5', 'massTransferEfficiencyFixed_0_75', \
                'unstableCaseBB', 'unstableCaseBB','alpha0_1', 'alpha0_5', 'alpha2_0', 'alpha10', 'fiducial', 'rapid', 'maxNSmass2_0', 'maxNSmass3_0', 'noPISN',  'ccSNkick_100km_s', 'ccSNkick_30km_s', 'noBHkick', 'wolf_rayet_multiplier_0_1', 'wolf_rayet_multiplier_5']
