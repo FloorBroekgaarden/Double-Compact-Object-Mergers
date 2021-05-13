@@ -838,7 +838,7 @@ if runNSBH ==True:
 
 
 if runGeneralBHNS ==True:
-	for BPS in ['A','B',  'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q' ]:
+	for BPS in ['A','B',  'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q' , 'R', 'S', 'T']:
 		print(BPS)
 		for DCOtype in ['BHNS']:
 			print('at DCOtype =', DCOtype)
@@ -847,7 +847,7 @@ if runGeneralBHNS ==True:
 
 
 if runGeneralNSNS ==True:
-	for BPS in  ['A','B',  'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q' ]:
+	for BPS in  ['A','B',  'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T' ]:
 		print(BPS)
 		for DCOtype in ['BBH']:
 			print('at DCOtype =', DCOtype)
@@ -855,7 +855,7 @@ if runGeneralNSNS ==True:
 			print('done with ', BPS)
 
 if runGeneralBHBH ==True:
-	for BPS in  ['A','B',  'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q' ]:
+	for BPS in  ['A','B',  'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T' ]:
 		print(BPS)
 		for DCOtype in ['BNS']:
 			print('at DCOtype =', DCOtype)

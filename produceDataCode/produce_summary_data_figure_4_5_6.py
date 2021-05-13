@@ -200,7 +200,7 @@ for DCOtype in ['BBH', 'BNS', 'BHNS']:
     print('---------------------------')
     print('---------------------------')
     print('at DCO model', DCOtype)
-    for ind_m, BPSmodelName in enumerate(['A', 'B', 'C',  'D', 'E', 'F', 'G', 'H',  'I' ,'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q']):
+    for ind_m, BPSmodelName in enumerate(['A', 'B', 'C',  'D', 'E', 'F', 'G', 'H',  'I' ,'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T']):
         print()
         print('------------------------------------------')
         calculateConfidenceIntervals(BPSmodelName=BPSmodelName, MSSFRnameslist=MSSFRnameslist, DCOtype=DCOtype, whichWeight='det')

@@ -97,17 +97,18 @@ def writeFormationRatesAndChannelsToFile(DCOtype='BBH', \
  
 
 	print('now at DCO type  ', DCOtype)
-		
-	for ind_m, bps_model in enumerate(BPSnameslist):    
+	# for ind_m, bps_model in enumerate(BPSnameslist):  	
+	for ind_m, bps_model in enumerate(['F', 'H', 'K']):    
 
 		print()
+		print('now at bps label,' bps_model)
 		print('now at model ', alphabetDirDict[bps_model])
 			
 		# set always optimistic CE false, unless we are doing the optimistic variation
 		OPTIMISTIC=False
-		if bps_model=='H':
+		if (bps_model=='F') or (bps_model=='K'):
 			OPTIMISTIC=True
-			print('doing optimistic version of fiducial')
+			print('doing optimistic version of %s'%alphabetDirDict[bps_model])
 			
 		# path to datafile 
 		# path = pathCOMPASOutput+alphabetDirDict[bps_model] + '/' + 'COMPASCompactOutput_'+DCOtype +'_'+bps_model+'.h5'
@@ -281,7 +282,7 @@ import string
 print('number of Models = ', nModels)
 
 # if you run this script for the first time, please run this by setting INITIALIZE = True
-INITIALIZE=True
+INITIALIZE=False
 
 if INITIALIZE == True:
 	createEmptyCSVplaceholder(DCOtype='BHNS', nBPSmodels=nModels)
