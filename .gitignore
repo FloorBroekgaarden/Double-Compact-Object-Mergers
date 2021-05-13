@@ -1,7 +1,7 @@
 *.pyc
 # *.hdf5
 # *.h5
-*.csv
+# *.csv
 *.mov
 *.mp4
 *.gif
