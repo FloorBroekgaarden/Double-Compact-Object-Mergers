@@ -1,0 +1,4 @@
+#	#	#	#	#	#	#	#	#	#	#	#	#	#	#	#	#	#	#	#	#	#	#	#	#	#	#	#	#	#	#	#	#	#	#	#
+int	int	int	int	int	int	int	int	int	int	int	int	int	int	int	int	int	int	int	int	int	int	int	int	int	int	int	int	int	int	int	int	int	int	bool	bool
+m_randomSeed	eventCounter	mt_primary_ep1	mt_primary_ep1_K1	mt_primary_ep1_K2	mt_primary_ep2	 mt_primary_ep2_K1	mt_primary_ep2_K2	mt_primary_ep3	 mt_primary_ep3_K1	mt_primary_ep3_K2	mt_secondary_ep1	mt_secondary_ep1_K1	 mt_secondary_ep1_K2	mt_secondary_ep2	mt_secondary_ep2_K1	mt_secondary_ep2_K2	mt_secondary_ep3	mt_secondary_ep3_K1	mt_secondary_ep3_K2	SN_primary_type_1	SN_primary_type_2	SN_primary_type_3	SN_secondary_type_1	SN_secondary_type_2	 SN_secondary_type_3	CEE	CEE_instigator	CEE_failed	CEE_failed_instigator	CEE_wet	CEE_wet_instigator	stellar_type_K1	stellar_type_K2	merged_in_Hubble_time	binary_disbound
+40001314	6	1	2	1	0	0	0	0	0	0	3	14	4	5	14	8	0	0	0	2	0	0	6	0	0	4	2	0	0	0	0	14	8	1	0

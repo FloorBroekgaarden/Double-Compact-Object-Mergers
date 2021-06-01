@@ -1,0 +1,4 @@
+#	#	#	#	Msol	Msol	AU	#	#	#	#	#	#	#	#	#	yr^-1	yr^-1	kms^-1	kms^-1	kms^-1	kms^-1	#	#	#	#	#	#	#	#	#	#
+int	int	float	int	float	float	float	float	float	float	float	float	float	float	float	float	float	float	float	float	float	float	float	float	float	float	float	bool	bool	int	int	bool
+ID	SEED	weight	samplingPhase	mass1	mass2	separation	eccentricity	rk1	theta1	phi1	meanAnomaly1	rk2	theta2	phi2	meanAnomaly2	omega1	omega2	sigma_kick_CCSN_NS	sigma_kick_CCSN_BH	sigma_kick_ECSN	sigma_kick_USSN	LBV_multiplier	WR_multiplier	CE_Alpha	Metallicity1	Metallicity2	disbound	stellar_merger	S1type_final	S2type_final	errorFlag
+0	40001314	1	-1	44.6426	15.5931	0.607197	0	0.109412	-0.137877	3.1854	3.4978	0.16421	0.568685	0.0143356	0.530347	inf	inf	265	265	30	30	1.5	1	1	0.0001	0.0001	0	0	14	13	0
