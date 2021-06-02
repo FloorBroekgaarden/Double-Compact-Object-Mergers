@@ -73,7 +73,9 @@ def print_sum_and_flag(keys=['systems'], DCOkeys=['M1', 'M2'], which='B'):
 
     fdata = h5.File(path)
     mask_BHNS = np.in1d(fdata['systems']['SEED'][...].squeeze(), fewseeds) 
-    print('normalization =', float(np.sum(mask_BHNS))/(len(BHNS_seeds_B)))
+    print('normalization =', float(np.sum(mask_BHNS))/(
+
+        len(BHNS_seeds_B)))
     
     
     for key in keys:
