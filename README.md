@@ -18,7 +18,7 @@ The fiducial simulation settings are summarized in [Broekgaarden et al. (2021)](
 Table with summary of the fiducial model settings in COMPAS can be found [here](https://github.com/FloorBroekgaarden/Double-Compact-Object-Mergers/blob/main/otherFiles/Table_with_detailed_binary__population_synthesis_simulation_settings.pdf)
 
 Table with summary of the fiducial model settings in COMPAS can be found [here for a PDF](https://github.com/FloorBroekgaarden/Double-Compact-Object-Mergers/blob/main/otherFiles/Table_with_detailed_binary__population_synthesis_simulation_settings.pdf)
-and shown a png: 
-![alt text](https://github.com/FloorBroekgaarden/Double-Compact-Object-Mergers/blob/main/otherFiles/Table_with_detailed_binary__population_synthesis_simulation_settings.png?raw=true)
+and a preview of the PDF is added here as png: 
+![alt text](https://github.com/FloorBroekgaarden/Double-Compact-Object-Mergers/blob/main/otherFiles/Table_with_detailed_binary__population_synthesis_simulation_settings_Page_1.png?raw=true)
 
 
