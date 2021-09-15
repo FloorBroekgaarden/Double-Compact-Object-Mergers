@@ -12,3 +12,5 @@ An overview of the simulations and number of BHBH, BHNS and NSNS mergers in each
 
 ![alt text](https://github.com/FloorBroekgaarden/Double-Compact-Object-Mergers/blob/main/otherFiles/DCO_table_detailed.png?raw=true)
 
+The fiducial simulation settings are summarized in [Broekgaarden et al. (2021)](https://ui.adsabs.harvard.edu/abs/2021arXiv210302608B/abstract) and the table below: 
+
