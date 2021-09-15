@@ -6,8 +6,8 @@ Repository for paper II DCO
 
 
 The simulations are given on Zenodo: 
-BHNS:  [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5178777.svg)](https://doi.org/10.5281/zenodo.5178777) 
-NSNS:  [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5189849.svg)](https://doi.org/10.5281/zenodo.5189849)
+BHNS:  [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5178777.svg)](https://doi.org/10.5281/zenodo.5178777) <\n>
+NSNS:  [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5189849.svg)](https://doi.org/10.5281/zenodo.5189849) <\n>
 
 An overview of the simulations and number of BHBH, BHNS and NSNS mergers in each zenodo file can be found here:
 
