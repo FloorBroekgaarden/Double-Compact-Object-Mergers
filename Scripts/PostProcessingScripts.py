@@ -20,9 +20,9 @@ from matplotlib.ticker import (FormatStrFormatter,
                                AutoMinorLocator)
 #Set latex environment for plots/labels
 import matplotlib
-matplotlib.rc('font', **{'family': 'sans-serif'})#, 'sans-serif': ['Helvetica']})
-matplotlib.rc('text', usetex=True)
-matplotlib.rcParams['text.latex.preamble'] = [r'\boldmath']
+# matplotlib.rc('font', **{'family': 'sans-serif'})#, 'sans-serif': ['Helvetica']})
+# matplotlib.rc('text', usetex=True)
+# matplotlib.rcParams['text.latex.preamble'] = [r'\boldmath'])
 
 
 
@@ -41,8 +41,8 @@ from scipy.spatial.distance import cdist
 
 rc('font', family='serif', weight = 'bold')
 rc('text', usetex=True)
-matplotlib.rcParams['text.latex.preamble']=[r"\usepackage{amsmath}"]
-matplotlib.rcParams['text.latex.preamble'] = [r'\boldmath']
+# matplotlib.rcParams['text.latex.preamble']=[r"\usepackage{amsmath}"]
+matplotlib.rcParams['text.latex.preamble'] = r'\boldmath'
 rc('axes', linewidth=2)
 
 matplotlib.rcParams['xtick.major.size'] = 12
