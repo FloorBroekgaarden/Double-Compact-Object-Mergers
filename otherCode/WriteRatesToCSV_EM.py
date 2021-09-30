@@ -8,7 +8,7 @@ import sys
 import copy
 #Quick fudge to make import from ../Scripts work
 import sys
-sys.path.append('/Users/floorbroekgaarden/Projects/BlackHole-NeutronStar/Scripts')
+sys.path.append('../Scripts')
 import string
 
 # import ClassCosmicIntegrator  as CI #Given settings and redshifts returns rates (2D arrays) Loads the data
@@ -486,8 +486,6 @@ def writeToRatesFile_FormationChannels(BPSmodelName='Z', DCOtype='BHNS'):
 
 
 
-
-
 	if DCOtype=='BHNS':
 		DCOname='BHNS'
 	elif DCOtype=='BBH':
@@ -701,8 +699,7 @@ def writeToRatesFile_NSBH(BPSmodelName='Z'):
 	"""writes NS-BH rate to CSV file for all models"""
 
 
-	DCOtype='BHNS'
-	DCOname='BHNS'
+	DCOname=dic
 
 
 
@@ -782,6 +779,93 @@ def writeToRatesFile_NSBH(BPSmodelName='Z'):
 
 
 	df.to_csv('/Users/floorbroekgaarden/Projects/BlackHole-NeutronStar/csvFiles/rates_MSSFR_Models_'+DCOname+ '_' + stringgg  + '.csv')
+	fdata.close() 
+	return
+
+
+
+
+def writeToRatesFile_lightestFormsFirst(BPSmodelName='Z', DCOtype='BHNS'):
+	"""writes NS-BH rate to CSV file for all models"""
+
+	if DCOtype=='BHNS':
+		DCOname='BHNS'
+	elif DCOtype=='BBH':
+		DCOname='BHBH'
+	elif DCOtype=='BNS':
+		DCOname='NSNS'
+
+
+
+
+	print('nmodels =', nModels)
+	# path for files 
+	path_dir = '/Volumes/Andromeda/DATA/AllDCO_bugfix/'
+
+	path_ = path_dir
+	path_ = path_ + alphabetDirDict[BPSmodelName] +'/'
+	path  = path_ + 'COMPASCompactOutput_'+ DCOtype +'_' + BPSmodelName + '.h5'
+
+
+	fdata = h5.File(path)
+	
+	# obtain BH and NS masses
+	M1 = fdata['doubleCompactObjects']['M1'][...].squeeze()
+	M2 = fdata['doubleCompactObjects']['M2'][...].squeeze()
+	MBH, MNS = obtainM1BHandM2BHassymetric(M1, M2)
+
+
+	whichSN = fdata['supernovae']['whichStar'][...].squeeze()[::2] # get whichStar for first SN 
+	maskNSBH = ((whichSN==2) & (M1>M2) ) | ((whichSN==1) & (M1<M2) ) 
+
+
+
+	del M1
+	del M2
+
+
+
+
+	# get intrinsic weights
+
+	fparam_intrinsic = 'weights_intrinsic'
+	# get detected weights
+
+	fparam_detected = 'weights_detected'
+
+
+	####################################################
+	######### ITERATE  OVER  MSSFR  MODELS #############
+	####################################################
+	intrinsicRates = np.zeros(len(MSSFRnameslist))
+	detectedRates = np.zeros(len(MSSFRnameslist))
+	namesEMlist = []
+
+	for ind_mssfr, mssfr in enumerate(MSSFRnameslist):
+#             print('mssfr =',ind_mssfr)
+		weightheader = 'w_' + mssfr
+		w_int = fdata[fparam_intrinsic][weightheader][...].squeeze()[maskNSBH]
+		w_det = fdata[fparam_detected][weightheader][...].squeeze()[maskNSBH]
+
+		intrinsicRates[ind_mssfr] = np.sum(w_int)
+		detectedRates[ind_mssfr] = np.sum(w_det)
+
+
+
+	   
+
+
+	stringgg =  'lightestFormsFirst'
+
+	df = pd.read_csv('/Users/floorbroekgaarden/Projects/GitHub/Double-Compact-Object-Mergers/dataFiles/lightestBHformsFirst/rates_MSSFR_Models_'+DCOname+ '_' + stringgg + '.csv', index_col=0)
+	namez0 = BPSmodelName + ' intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
+	nameObs = BPSmodelName + ' observed (design LVK) [yr^{-1}]'
+
+	df[namez0] = intrinsicRates
+	df[nameObs] = detectedRates 
+
+
+	df.to_csv('/Users/floorbroekgaarden/Projects/GitHub/Double-Compact-Object-Mergers/dataFiles/lightestBHformsFirst/rates_MSSFR_Models_'+DCOname+ '_' + stringgg  + '.csv')
 	fdata.close() 
 	return
 
@@ -906,12 +990,71 @@ def writeToRatesFile_GW190814(BPSmodelName='Z', DCOtype='BNS'):
 #### RUN different simulation summaries : 
 
 runMejecta = False
-runFormationChannels =True 
+runFormationChannels =False
 runNSBH = False
 runGeneralBHNS = False
 runGeneralBHBH = False
 runGeneralNSNS = False
+runLightestFormsFirst = True 
   
+
+
+
+
+if runLightestFormsFirst==True:
+
+	# INITIALIZE FILE 
+	namesEMlist=[]
+
+	DCOname ='BHBH'
+	iii=0
+	
+
+	# CREATE PANDAS FILE 
+	nModels=26
+	BPSnameslist = list(string.ascii_uppercase)[0:nModels]
+
+	NAMES = []
+	stringgg = 'lightestFormsFirst'
+
+	for ind_l, L in enumerate(BPSnameslist):
+		str_z0 = str(L + ' intrinsic (z=0) [Gpc^{-3} yr^{-1}]')
+		str_obs = str(L + ' observed (design LVK) [yr^{-1}]')
+		NAMES.append(str_z0)
+		NAMES.append(str_obs)
+		
+		
+
+
+	datas=[]
+
+	for i in range(len(BPSnameslist)):
+		datas.append(np.zeros_like(MSSFRnameslist))
+		datas.append(np.zeros_like(MSSFRnameslist))
+		
+		
+	df = pd.DataFrame(data=datas, index=NAMES, columns=MSSFRnameslistCSV).T
+	df.columns =   df.columns.map(str)
+	df.index.names = ['.x.y.z']
+	df.columns.names = ['m']
+
+	# print(df) 
+
+	df.to_csv('/Users/floorbroekgaarden/Projects/GitHub/Double-Compact-Object-Mergers/dataFiles/lightestBHformsFirst/rates_MSSFR_Models_'+DCOname+ '_' + stringgg + '.csv')
+
+	# run calculation 
+	for BPS in  BPSnameslist:
+		print(BPS)
+		for DCOtype in ['BHBH']:
+			print('at DCOtype =', DCOtype)
+			writeToRatesFile_lightestFormsFirst(BPSmodelName=BPS, DCOtype=DCOtype)
+			print('done with ', BPS)
+
+
+
+
+
+
 
 
 if runMejecta ==True:
