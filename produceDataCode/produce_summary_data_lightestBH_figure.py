@@ -482,6 +482,17 @@ def writeToRatesFile_lightestFormsFirst(BPSmodelName='Z', DCOtype='BHNS'):
 	print(whichSN)
 	print(set(whichSN))
 	print(len(whichSN), len(M1), len(M2))
+
+	
+	mask_temp = ((whichSN==2) & (M1>M2) )
+	mask_2 = ((whichSN==1) & (M1<M2))
+	print('nr of weird reversals = %s'%np.sum(mask_temp))
+	print('nr of normal reversals = %s'%np.sum(mask_2))
+
+
+
+
+
 	maskNSBH = ((whichSN==2) & (M1>M2) ) | ((whichSN==1) & (M1<M2) ) 
 
 
