@@ -1,7 +1,7 @@
 from __future__ import division # in case this script is used in python 2 
 import h5py as h5
 
-
+import os
 import numpy as np
 import string
 
@@ -1317,5 +1317,206 @@ def getXmomentOfMT(Seeds, maxCounter=10):
 # ChannelLabelListShort = ['1','2','3','4','1b','2b', '5' ] # shorter notation of ChannelLabelList
 
 
+
+
+class COspin(object):
+    """
+    This class calculates the Black Hole (BH) or Neutron Star (NS) spin
+    based on a given spin function/model 
+    
+    """
+    
+    
+    def __init__(self, data_path=None, SFRDmodel='312'):
+    
+        self.path                = data_path
+        if (self.path is None):
+            print("Just to double check you create instance of ClassCOMPAS without path/Data")
+        elif not  os.path.isfile(data_path):
+            raise ValueError("h5 file not found. Wrong path given?", "path given = %s"%data_path)
+        elif os.path.isfile(data_path):
+            self.h5file           = h5.File(data_path)
+            
+            
+        self.spin_model = None 
+        self.whichweight = None 
+        self.SFRDmodel = SFRDmodel  # SFRD model chosen for the weights 
+    
+        
+    def convert_a_to_P_circular(separation, M1, M2):
+        """calculate Period from separation
+        separation is separation (needs to be given in astropy units)
+        M1 and M2 are masses of the binary
+
+        """
+        G = const.G # [gr cm s^2]
+
+
+        mu = G*(M1+M2)
+        period = 2*np.pi * np.sqrt(separation**3/mu)
+
+
+        return period   
+        
+        
+    def setCOMPASData(self):
+        """ reads in some of the COMPAS parameters needed from hdf5 file """
+        
+        fDCO      = self.h5file['doubleCompactObjects'] # hdf5 file with the DCO information
+        fSN       = self.h5file['supernovae']  # hdf5 file with the SN information
+        #
+        self.M1 = fDCO['M1'][...].squeeze()   # Compact object mass [Msun] of the initially more massive star
+        self.M2 = fDCO['M2'][...].squeeze()  # Compact object mass [Msun] of the initially less massive star
+        self.metallicitySystems  = fDCO['Metallicity1'][...].squeeze()
+        
+        if self.whichweight =='DCOweights':
+            self.weight  = fDCO['weight'][...].squeeze()  # system weights, these are representative of sampling that binary from the given metallicity in a galaxy.
+        elif self.whichweight =='detected':
+            self.weight  = self.h5file['weights_detected']['w_'+self.SFRDmodel]  # weights that account also for the detectability of the DCO and the star formation history (SFRD) 
+        elif self.whichweight =='intrinsic':
+            self.weight  = self.h5file['weights_intrinsic']['w_'+self.SFRDmodel]  # weights that account for the intrinsic rate (at redshift ~0) of the DCO for a given star formation history (SFRD) 
+        
+        
+        
+        self.seedsDCO = fDCO['seed'][...].squeeze()  # get the seeds in the DCO file 
+        self.seedsSN = fSN['randomSeed'][...].squeeze()    # get the seeds in the SN file 
+        maskSNdco = np.in1d(self.seedsSN,  self.seedsDCO) # mask in the SNe files the SNe that correspond to our DCO
+        whichSN = fSN['whichStar'][...].squeeze()[maskSNdco]   # this is 1 if the initially primary star goes SN and 2 if the secondary goes supernova
+        whichSN1 = whichSN[::2] # get whichStar for the first SN   (there are 2 SNe for all DCOs)       
+
+        self.separationPreSN2= fSN['separationBefore'][...].squeeze()[maskSNdco][1::2] # the separation just before each SN  in [Rsun], we need only the separation for the second SN to occur, so the [1::2]  
+        print(len(self.separationPreSN2), len(self.M1), len(self.M2))
+        self.PeriodPreSN2 = convert_a_to_P_circular(separation=self.separationPreSN2*u.Rsun, M1=self.M1*u.Msun, M2=self.M2*u.Msun)  # obtain the Period before the SNe
+        self.PeriodPreSN2 = self.PeriodPreSN2.to(u.d).value
+        self.MassCOCoreSN = fSN['MassCOCoreSN'][...].squeeze()[maskSNdco][1::2]   # obtain the CO core mass before the SNe
+        
+        self.st1 = fDCO['stellarType1'][...].squeeze()   # obtain the final stellar type of the Primary 
+        self.st2 = fDCO['stellarType2'][...].squeeze()   # obtain the final stellar type of the Secondary
+        
+        self.spinM1 = np.zeros_like(self.M1)  # start by giving all primaries zero spin 
+        self.spinM2 = np.zeros_like(self.M2)  # start by giving all secondaries zero spin 
+        # did M1 form in the first SN?
+        self.M1formedFirst =  (whichSN1==1) # mask that is 1 if the  compact object M1 formed first in the DCO
+        # did M2 form in the first SN?
+        self.M2formedFirst =  (whichSN1==2)  # mask that is 1 if the compact object M2 formed first in the DCO
+#         self.mWR =  fdata['supernovae']['MassCOCoreSN'][...].squeeze()[maskSNdco][1::2]   # obtain the CO core mass before the SNe
+        self.mWR =  fSN['MassStarSN'][...].squeeze()[maskSNdco][1::2]   # obtain the CO core mass before the SNe
+
+
+    
+    def QinSpin(self):
+        """
+        Returns spinM1 and spinM2, the spins of the compact objects formed from
+        the initial most massive star (M1) and initial least massive star (M2), respectively. 
+        
+        In this approximation only a BH that is formed second can be tidally spun up, if its 
+        pre-SN separation is tight enough. 
+        
+        see Qin+18, approximation originally given in https://ui.adsabs.harvard.edu/abs/2021MNRAS.504.3682C 
+        (and Equation 5 in https://arxiv.org/pdf/2103.02608.pdf)
+        
+        """
+        
+        m_, c_ = -5./3, 0.5 # from Qin + 2018 
+
+        # if BH & formed second, calculate spin with Qin+18 approximation
+        maskGiveSpin1 = ((self.st1==14) & (self.M1formedFirst==0))
+        maskGiveSpin2 = ((self.st2==14) & (self.M2formedFirst==0))
+        
+        
+        # # first mask super tight NSBH that will get spin 1
+        maskSpin1 = (np.log10(self.PeriodPreSN2) < -0.3) & (maskGiveSpin1 ==1)                        
+        maskSpin2 = (np.log10(self.PeriodPreSN2) < -0.3) & (maskGiveSpin2 ==1)
+        self.spinM1[maskSpin1] = np.ones(np.sum(maskSpin1)) # fill with ones 
+        self.spinM2[maskSpin2] = np.ones(np.sum(maskSpin2)) # fill with ones 
+  
+        
+        # now assign the spin for systems that lie in between the 0 and 1 spin using the fitting formulae
+        maskChi_var1 = (np.log10(self.PeriodPreSN2) > -0.3) &  (np.log10(self.PeriodPreSN2) < 0.3)  &(maskGiveSpin1==1)
+        self.spinM1[maskChi_var1] =  m_ * np.log10(self.PeriodPreSN2[maskChi_var1])  + c_   
+             
+        maskChi_var2 = (np.log10(self.PeriodPreSN2) > -0.3) &  (np.log10(self.PeriodPreSN2) < 0.3)  &(maskGiveSpin2==1)
+        self.spinM2[maskChi_var2] =  m_ * np.log10(self.PeriodPreSN2[maskChi_var2])  + c_   
+              
+    
+        return self.spinM1, self.spinM2
+
+    
+    
+    def calculate_alpha_beta_Bavera21(self, c1_alpha, c2_alpha, c3_alpha,  c1_beta,  c2_beta,  c3_beta):
+
+
+        alpha = self.function_f_Bavera21(c1_alpha, c2_alpha, c3_alpha)
+        beta  = self.function_f_Bavera21(c1_beta,  c2_beta,  c3_beta)
+
+        return alpha, beta
+
+    def function_f_Bavera21(self, c1, c2, c3):
+        """
+        m_WR with units using astropy
+
+
+        """
+
+        top = -c1
+        bottom = c2 + np.exp(-c3*self.mWR)
+
+        f = top/bottom
+
+
+        return f        
+        
+        
+    def BaveraSpin(self):
+        """
+        Returns spinM1 and spinM2, the spins of the compact objects formed from
+        the initial most massive star (M1) and initial least massive star (M2), respectively. 
+        
+        In this approximation only a BH that is formed second can be tidally spun up, if its 
+        pre-SN separation is tight enough. 
+
+        based on Eq 1 and 2 from https://arxiv.org/pdf/2105.09077.pdf
+    
+    
+        """
+
+        # numerical coefficients form text below Eq 2
+        # we use the values at helium depletion, since we later on use the C/O core mass. 
+        c1_alpha, c2_alpha, c3_alpha =  0.059305, 0.035552, 0.270245
+        c1_beta,  c2_beta, c3_beta   =  0.026960, 0.011001, 0.420739
+        
+        alpha, beta = self.calculate_alpha_beta_Bavera21(c1_alpha, c2_alpha, c3_alpha,  c1_beta,  c2_beta,  c3_beta)      
+        
+
+        # if BH & formed second, calculate spin with Qin+18 approximation
+        maskGiveSpin1 = ((self.st1==14) & (self.M1formedFirst==0))
+        maskGiveSpin2 = ((self.st2==14) & (self.M2formedFirst==0))
+        
+        # 
+        # mask shorter than 1 day & a BH formed second 
+        maskSpin1 = (np.log10(self.PeriodPreSN2) < 1) & (maskGiveSpin1 ==1)                        
+        maskSpin2 = (np.log10(self.PeriodPreSN2) < 1) & (maskGiveSpin2 ==1)
+        
+        first_term = (alpha* (np.log10(self.PeriodPreSN2)**2)) 
+        second_term =  ( beta * np.log10(self.PeriodPreSN2))  
+        self.spinM1[maskSpin1]  =  first_term[maskSpin1]  + second_term[maskSpin1]  
+        self.spinM2[maskSpin2]  =  first_term[maskSpin2]  + second_term[maskSpin2] 
+        
+        # HAVE TO ADD 
+        # mask_  = (self.PeriodPreSN2<0.1)
+        # self.spinM1[self.spinM1<0] = np.zeros(np.sum(mask_))
+        # self.spinM2[self.spinM2<0] = np.zeros(np.sum(mask_))
+
+
+        mask_ = (self.spinM1<0)
+        self.spinM1[self.spinM1<0] = np.zeros(np.sum(mask_))
+        mask_ = (self.spinM2<0)
+        self.spinM2[self.spinM2<0] = np.zeros(np.sum(mask_))
+        
+        
+        return self.spinM1, self.spinM2
+    
+    
+    
 
 
