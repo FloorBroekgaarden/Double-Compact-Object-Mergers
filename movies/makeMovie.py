@@ -195,12 +195,80 @@ def makeMovie_Mtotq_FormChannel(whichRate='intrinsic', fps=.4, duration=300):
 
 
 
+
+#####
+
+def makeMovie_chi_BH(which_param='chi_BH1', fps=.4, duration=300):
+	'''
+	whichRate = 'intrinsic' or 'observed'
+	fps=0.4, frames per second
+	duration = duration of the movie 
+	'''
+
+
+
+
+	nModels=17 # 
+	BPSnameslist = ['A','B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',  'P', 'Q', 'R', 'S', 'T'] #list(string.ascii_uppercase)[0:nModels]
+
+
+	mssfr = '112'
+                
+  
+	image_folder = '/Users/floorbroekgaarden/Projects/GitHub/Double-Compact-Object-Mergers/plottingCode/extra/lightestBHformsFirst/'
+
+	images = []
+
+	for ind_m, BPSmodel in enumerate(BPSnameslist):
+		images.append(image_folder +   'Prob_weight_MRR_vs_q_model_log_'+BPSmodel+ mssfr+ '_'+ which_param +'.png' )
+
+
+
+	image_files = images
+	clip = moviepy.video.io.ImageSequenceClip.ImageSequenceClip(image_files, fps=fps)
+	clip.write_videofile(image_folder+'movie_'+ 'M1_' + 'BHBH' + which_param  +  '.mp4')
+
+
+	# make also gif:
+ 
+	# Create the frames
+	frames = []
+	# imgs = glob.glob("*.png")
+	for i in images:
+	    new_frame = Image.open(i)
+	    frames.append(new_frame)
+	 
+	# Save into a GIF file that loops forever
+	frames[0].save(image_folder+'gif_'+ 'det_rates_rel_' + 'BHBH' +  which_param + '.gif', format='GIF',
+	               append_images=frames[1:],
+	               save_all=True,
+	               duration=duration, loop=0)
+
+
+	print('done')
+	return 
+
+
+
+
 makeMovie_intrinsicRates=False
 makeMovie_intrinsicM1=False
-makeMovie_Mtotq_FormChannels=True
+makeMovie_Mtotq_FormChannels=False
+makeMovieChiBH=True
+
+
+
+
+
+
 
 
 # Run rhis using python 3!! 
+
+if makeMovieChiBH==True:
+	makeMovie_chi_BH(which_param='chi_BH1')
+	makeMovie_chi_BH(which_param='chi_BH2')
+
 
 if makeMovie_intrinsicRates==True:
 	makeMovie_rates(whichRate='intrinsic')
