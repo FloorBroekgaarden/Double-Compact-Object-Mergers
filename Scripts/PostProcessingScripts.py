@@ -56,6 +56,10 @@ fs = 24 # fontsize for plots
 rc('axes', linewidth=2)
 
 
+
+
+
+
 def layoutAxes(ax, nameX='', nameY='', \
                labelSizeMajor = 10, fontsize = 25, second=False, labelpad=None, setMinor=True):
     """
@@ -136,6 +140,10 @@ def layoutAxesNoXandYlabel(ax, nameX='', nameY='', \
         ax.yaxis.set_minor_locator(AutoMinorLocator())
 
     return ax
+
+
+
+
 
 
 def layoutAxesNoXlabel(ax, nameX='', nameY='', \
@@ -821,7 +829,62 @@ class gaussian_kde(object):
         self._norm_factor = np.sqrt(np.linalg.det(2*np.pi*self.covariance)) #* self.n
 
         
-        
+
+
+
+class MirroredKDE(gaussian_kde):
+    """ KDE class that mirrors data at boundaries to account for bounded support """
+
+    def __init__(self, data, weights=None, lower_bound=None, upper_bound=None,
+                 bw_method=None, bw_adjust=None):
+        """ instantiate class in similar way to scipy but with some additions """
+        super().__init__(data, weights=weights, bw_method=bw_method)
+
+        # also store the lower and upper bounds
+        self._lower_bound = lower_bound
+        self._upper_bound = upper_bound
+
+        # allow adjustment of the default bandwidth similar to seaborn
+        if bw_adjust is not None:
+            self.set_bandwidth(self.factor * bw_adjust)
+
+    def evaluate(self, x_vals=None, x_min=None, x_max=None, x_count=200):
+        """ evaluate the kde taking into account the boundaries """
+
+        # only return x_vals when they aren't supplied
+        return_x_vals = x_vals is None
+
+        if x_vals is None:
+            if x_min is None:
+                x_min = np.min(self.dataset)
+            if x_max is None:
+                x_max = np.max(self.dataset)
+            x_vals = np.linspace(x_min, x_max, x_count)
+
+        # make a copy of the data before I mirror anything
+        unmirrored_x_vals = np.copy(x_vals)
+
+        # evaluate the kde at the original x values
+        kde_vals = super().evaluate(x_vals)
+
+        # if either bound is present then mirror the data and
+        # add the evaluated kde for the mirrored data to the original
+        if self._lower_bound is not None:
+            x_vals = 2.0 * self._lower_bound - x_vals
+            kde_vals += super().evaluate(x_vals)
+            x_vals = unmirrored_x_vals
+
+        if self._upper_bound is not None:
+            x_vals = 2.0 * self._upper_bound - x_vals
+            kde_vals += super().evaluate(x_vals)
+            x_vals = unmirrored_x_vals
+
+        if return_x_vals:
+            return x_vals, kde_vals
+        else:
+            return kde_vals
+
+       
 
 def lowess(x, y, f=2. / 3., iter=3):
     """lowess(x, y, f=2./3., iter=3) -> yest
