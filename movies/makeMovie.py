@@ -251,10 +251,10 @@ def makeMovie_chi_BH(which_param='chi_BH1', fps=.4, duration=300):
 
 
 
-makeMovie_intrinsicRates=False
+makeMovie_intrinsicRates=True
 makeMovie_intrinsicM1=False
 makeMovie_Mtotq_FormChannels=False
-makeMovieChiBH=True
+makeMovieChiBH=False
 
 
 

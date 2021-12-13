@@ -1580,6 +1580,9 @@ class COspin(object):
         return self.spinM1, self.spinM2
     
     
+
+
+    
     
 
 

@@ -29,8 +29,8 @@ def returnSeedsPercentageClassicAndOnlyStableMT(pathCOMPASOutput='/Volumes/Andro
 
     # retrive hdf5 file 
     # f          = h5.File(pathCOMPASOutput+'COMPASOutput.h5')
-    f          = h5.File(pathCOMPASOutput)
 
+    f          = h5.File(pathCOMPASOutput)
     # obtain the BHNS seeds: 
     Data            = CC.COMPASData(path=pathCOMPASOutput, lazyData=True, Mlower=5., \
                      Mupper=150., binaryFraction=binaryFraction)
@@ -624,7 +624,8 @@ def returnSeedsPercentageOther(pathCOMPASOutput='/Volumes/Andromeda/DATA/AllDCO_
     seedsChannel = Data.seeds[maskk]
     percentageChannel = (np.sum(Data.weight[maskk])/np.sum(Data.weight))*100
     
-    print('percentage other channel = ', percentageChannel)    
+    print('percentage other channel = ', percentageChannel)  
+    print('inside after')  
     return seedsChannel, percentageChannel
 
 
