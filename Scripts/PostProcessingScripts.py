@@ -1381,7 +1381,6 @@ def getXmomentOfMT(Seeds, maxCounter=10):
 
 
 
-
 class COspin(object):
     """
     This class calculates the Black Hole (BH) or Neutron Star (NS) spin
@@ -1389,8 +1388,9 @@ class COspin(object):
     
     """
     
+    print('changed 3')
     
-    def __init__(self, data_path=None, SFRDmodel='312'):
+    def __init__(self, data_path=None, state='he_depletion'):
     
         self.path                = data_path
         if (self.path is None):
@@ -1403,7 +1403,7 @@ class COspin(object):
             
         self.spin_model = None 
         self.whichweight = None 
-        self.SFRDmodel = SFRDmodel  # SFRD model chosen for the weights 
+        self.state = state 
     
         
     def convert_a_to_P_circular(separation, M1, M2):
@@ -1430,40 +1430,67 @@ class COspin(object):
         #
         self.M1 = fDCO['M1'][...].squeeze()   # Compact object mass [Msun] of the initially more massive star
         self.M2 = fDCO['M2'][...].squeeze()  # Compact object mass [Msun] of the initially less massive star
-        self.metallicitySystems  = fDCO['Metallicity1'][...].squeeze()
+        # self.metallicitySystems  = fDCO['Metallicity1'][...].squeeze()
         
-        if self.whichweight =='DCOweights':
-            self.weight  = fDCO['weight'][...].squeeze()  # system weights, these are representative of sampling that binary from the given metallicity in a galaxy.
-        elif self.whichweight =='detected':
-            self.weight  = self.h5file['weights_detected']['w_'+self.SFRDmodel]  # weights that account also for the detectability of the DCO and the star formation history (SFRD) 
-        elif self.whichweight =='intrinsic':
-            self.weight  = self.h5file['weights_intrinsic']['w_'+self.SFRDmodel]  # weights that account for the intrinsic rate (at redshift ~0) of the DCO for a given star formation history (SFRD) 
+        # if self.whichweight =='DCOweights':
+        #     self.weight  = fDCO['weight'][...].squeeze()  # system weights, these are representative of sampling that binary from the given metallicity in a galaxy.
+        # elif self.whichweight =='detected':
+        #     self.weight  = self.h5file['weights_detected']['w_'+self.SFRDmodel]  # weights that account also for the detectability of the DCO and the star formation history (SFRD) 
+        # elif self.whichweight =='intrinsic':
+        #     self.weight  = self.h5file['weights_intrinsic']['w_'+self.SFRDmodel]  # weights that account for the intrinsic rate (at redshift ~0) of the DCO for a given star formation history (SFRD) 
         
         
         
         self.seedsDCO = fDCO['seed'][...].squeeze()  # get the seeds in the DCO file 
         self.seedsSN = fSN['randomSeed'][...].squeeze()    # get the seeds in the SN file 
+        u_seedsSN, indices = np.unique(self.seedsSN[1::2], return_index=True) # model O accidentely prints a few binaries double. By using np.unique we remove the double simulated
         maskSNdco = np.in1d(self.seedsSN,  self.seedsDCO) # mask in the SNe files the SNe that correspond to our DCO
-        whichSN = fSN['whichStar'][...].squeeze()[maskSNdco]   # this is 1 if the initially primary star goes SN and 2 if the secondary goes supernova
-        whichSN1 = whichSN[::2] # get whichStar for the first SN   (there are 2 SNe for all DCOs)       
+        whichSN = fSN['whichStar'][...].squeeze()[maskSNdco]  # this is 1 if the initially primary star goes SN and 2 if the secondary goes supernova
+        whichSN1 = whichSN[::2][indices] # get whichStar for the first SN   (there are 2 SNe for all DCOs)       
 
-        self.separationPreSN2= fSN['separationBefore'][...].squeeze()[maskSNdco][1::2] # the separation just before each SN  in [Rsun], we need only the separation for the second SN to occur, so the [1::2]  
-        print(len(self.separationPreSN2), len(self.M1), len(self.M2))
-        self.PeriodPreSN2 = convert_a_to_P_circular(separation=self.separationPreSN2*u.Rsun, M1=self.M1*u.Msun, M2=self.M2*u.Msun)  # obtain the Period before the SNe
+        self.separationPreSN2= fSN['separationBefore'][...].squeeze()[maskSNdco][1::2][indices] # the separation just before each SN  in [Rsun], we need only the separation for the second SN to occur, so the [1::2]  
+        print('this should be 3x the same:', len(self.separationPreSN2), len(self.M1), len(self.M2)) 
+        self.mWR =  fSN['MassStarSN'][...].squeeze()[maskSNdco][1::2][indices]   # obtain the CO core mass before the SNe
+        self.MassStarCompanion = fSN['MassStarCompanion'][...].squeeze()[maskSNdco][1::2][indices]  # mass of the companion star (BH) in Msun
+
+        # WRONG!! 
+        self.PeriodPreSN2 = convert_a_to_P_circular(separation=self.separationPreSN2*u.Rsun, M1=self.mWR*u.Msun, M2=self.MassStarCompanion*u.Msun)  # obtain the Period before the SNe
+        
+        # self.PeriodPreSN2 = convert_a_to_P_circular(separation=self.separationPreSN2*u.Rsun, M1=self.mWR*u.Msun, M2=self.MassStarCompanion*u.Msun)  # obtain the Period before the SNe
         self.PeriodPreSN2 = self.PeriodPreSN2.to(u.d).value
-        self.MassCOCoreSN = fSN['MassCOCoreSN'][...].squeeze()[maskSNdco][1::2]   # obtain the CO core mass before the SNe
+        # self.MassCOCoreSN = fSN['MassCOCoreSN'][...].squeeze()[maskSNdco][1::2]   # obtain the CO core mass before the SNe
         
         self.st1 = fDCO['stellarType1'][...].squeeze()   # obtain the final stellar type of the Primary 
         self.st2 = fDCO['stellarType2'][...].squeeze()   # obtain the final stellar type of the Secondary
         
         self.spinM1 = np.zeros_like(self.M1)  # start by giving all primaries zero spin 
         self.spinM2 = np.zeros_like(self.M2)  # start by giving all secondaries zero spin 
+
         # did M1 form in the first SN?
         self.M1formedFirst =  (whichSN1==1) # mask that is 1 if the  compact object M1 formed first in the DCO
         # did M2 form in the first SN?
         self.M2formedFirst =  (whichSN1==2)  # mask that is 1 if the compact object M2 formed first in the DCO
 #         self.mWR =  fdata['supernovae']['MassCOCoreSN'][...].squeeze()[maskSNdco][1::2]   # obtain the CO core mass before the SNe
-        self.mWR =  fSN['MassStarSN'][...].squeeze()[maskSNdco][1::2]   # obtain the CO core mass before the SNe
+        
+        # Supernovae properties 
+        # ['MassCOCoreSN',
+        #  'MassCoreSN',
+        #  'MassStarCompanion', 
+        #  'MassStarSN', 
+        #  'Survived',
+        #  'eccentricityBefore', 
+        #  'experiencedRLOF', 
+        #  'fallback', 
+        #  'previousStellarTypeCompanion',
+        #  'previousStellarTypeSN',
+        #  'randomSeed', 
+        #  'separationBefore', 
+        #  'whichStar']
+
+
+
+
+
 
 
     
@@ -1530,57 +1557,114 @@ class COspin(object):
         return f        
         
         
-    def BaveraSpin(self):
-        """
-        Returns spinM1 and spinM2, the spins of the compact objects formed from
-        the initial most massive star (M1) and initial least massive star (M2), respectively. 
+    # def BaveraSpin(self):
+    #     """
+    #     Returns spinM1 and spinM2, the spins of the compact objects formed from
+    #     the initial most massive star (M1) and initial least massive star (M2), respectively. 
         
-        In this approximation only a BH that is formed second can be tidally spun up, if its 
-        pre-SN separation is tight enough. 
+    #     In this approximation only a BH that is formed second can be tidally spun up, if its 
+    #     pre-SN separation is tight enough. 
 
-        based on Eq 1 and 2 from https://arxiv.org/pdf/2105.09077.pdf
+    #     based on Eq 1 and 2 from https://arxiv.org/pdf/2105.09077.pdf
     
     
-        """
+    #     """
 
-        # numerical coefficients form text below Eq 2
-        # we use the values at helium depletion, since we later on use the C/O core mass. 
-        c1_alpha, c2_alpha, c3_alpha =  0.059305, 0.035552, 0.270245
-        c1_beta,  c2_beta, c3_beta   =  0.026960, 0.011001, 0.420739
+    #     # numerical coefficients form text below Eq 2
+    #     # we use the values at helium depletion, since we later on use the C/O core mass. 
+    #     c1_alpha, c2_alpha, c3_alpha =  0.059305, 0.035552, 0.270245
+    #     c1_beta,  c2_beta, c3_beta   =  0.026960, 0.011001, 0.420739
         
-        alpha, beta = self.calculate_alpha_beta_Bavera21(c1_alpha, c2_alpha, c3_alpha,  c1_beta,  c2_beta,  c3_beta)      
+    #     alpha, beta = self.calculate_alpha_beta_Bavera21(c1_alpha, c2_alpha, c3_alpha,  c1_beta,  c2_beta,  c3_beta)      
+        
+
+    #     # if BH & formed second, calculate spin with Qin+18 approximation
+    #     maskGiveSpin1 = ((self.st1==14) & (self.M1formedFirst==0))
+    #     maskGiveSpin2 = ((self.st2==14) & (self.M2formedFirst==0))
+        
+    #     # 
+    #     # mask shorter than 1 day & a BH formed second 
+    #     maskSpin1 = (np.log10(self.PeriodPreSN2) < 1) & (maskGiveSpin1 ==1)                        
+    #     maskSpin2 = (np.log10(self.PeriodPreSN2) < 1) & (maskGiveSpin2 ==1)
+        
+    #     first_term = (alpha* (np.log10(self.PeriodPreSN2)**2)) 
+    #     second_term =  ( beta * np.log10(self.PeriodPreSN2))  
+    #     self.spinM1[maskSpin1]  =  first_term[maskSpin1]  + second_term[maskSpin1]  
+    #     self.spinM2[maskSpin2]  =  first_term[maskSpin2]  + second_term[maskSpin2] 
+        
+    #     # HAVE TO ADD 
+    #     # mask_  = (self.PeriodPreSN2<0.1)
+    #     # self.spinM1[self.spinM1<0] = np.zeros(np.sum(mask_))
+    #     # self.spinM2[self.spinM2<0] = np.zeros(np.sum(mask_))
+
+
+    #     mask_ = (self.spinM1<0)
+    #     self.spinM1[self.spinM1<0] = np.zeros(np.sum(mask_))
+    #     mask_ = (self.spinM2<0)
+    #     self.spinM2[self.spinM2<0] = np.zeros(np.sum(mask_))
+        
+        
+    #     return self.spinM1, self.spinM2
+    
+    def BaveraSpin(self): 
+        if self.state == 'c_depletion':
+            c1a = 0.051237
+            c2a = 0.029928
+            c3a = 0.282998
+            c1b = 0.027090
+            c2b = 0.010905
+            c3b = 0.422213
+        elif self.state == 'he_depletion':
+            c1a = 0.059305
+            c2a = 0.035552
+            c3a = 0.270245
+            c1b = 0.026960
+            c2b = 0.011001
+            c3b = 0.420739
+        else:
+            raise ValueError('state not supported!')
+        
+        # a_BH2(p >= 1) = 0 
+        a_BH2 = np.zeros(len(self.PeriodPreSN2)) # spin 
+        
+        def constant(m_WR, c1, c2, c3):
+            return -c1/(c2+np.exp(-c3*m_WR))
+        
+        alpha = constant(self.mWR[self.PeriodPreSN2<1.], c1a, c2a, c3a)
+        beta = constant(self.mWR[self.PeriodPreSN2<1.], c1b, c2b, c3b)
+
+
+
+        a_BH2[self.PeriodPreSN2<1.] = alpha*np.log10(self.PeriodPreSN2[self.PeriodPreSN2<1.])**2+beta*np.log10(self.PeriodPreSN2[self.PeriodPreSN2<1.])
         
 
         # if BH & formed second, calculate spin with Qin+18 approximation
         maskGiveSpin1 = ((self.st1==14) & (self.M1formedFirst==0))
         maskGiveSpin2 = ((self.st2==14) & (self.M2formedFirst==0))
-        
-        # 
-        # mask shorter than 1 day & a BH formed second 
-        maskSpin1 = (np.log10(self.PeriodPreSN2) < 1) & (maskGiveSpin1 ==1)                        
-        maskSpin2 = (np.log10(self.PeriodPreSN2) < 1) & (maskGiveSpin2 ==1)
-        
-        first_term = (alpha* (np.log10(self.PeriodPreSN2)**2)) 
-        second_term =  ( beta * np.log10(self.PeriodPreSN2))  
-        self.spinM1[maskSpin1]  =  first_term[maskSpin1]  + second_term[maskSpin1]  
-        self.spinM2[maskSpin2]  =  first_term[maskSpin2]  + second_term[maskSpin2] 
-        
-        # HAVE TO ADD 
-        # mask_  = (self.PeriodPreSN2<0.1)
-        # self.spinM1[self.spinM1<0] = np.zeros(np.sum(mask_))
-        # self.spinM2[self.spinM2<0] = np.zeros(np.sum(mask_))
+
+        self.spinM1[maskGiveSpin1]  =  a_BH2[maskGiveSpin1]
+        self.spinM2[maskGiveSpin2]  =  a_BH2[maskGiveSpin2]
+
+        # boundary conditions,if period < 0.09, make spin 1 
+        # self.spinM1[self.PeriodPreSN2<0.09] = np.ones_like(self.PeriodPreSN2[self.PeriodPreSN2<0.09]) # fill with ones 
+        # self.spinM2[self.PeriodPreSN2<0.09] = np.ones_like(self.PeriodPreSN2[self.PeriodPreSN2<0.09]) # fill with ones 
+        # print(len(self.PeriodPreSN2[self.PeriodPreSN2<0.09]), ' out of boundary condition Period')
+
+        # boundary conditions if M_WR < 8Msun make spin 0
+        # self.spinM1[self.mWR<8] = np.zeros_like(self.PeriodPreSN2[self.mWR<8]) # fill with ones 
+        # self.spinM2[self.mWR<8] = np.zeros_like(self.PeriodPreSN2[self.mWR<8]) # fill with ones 
+        # print(len(self.mWR[self.mWR<8]), ' out of boundary condition Wolf Rayet Mass')
+
+        print(len(self.spinM1[self.spinM1<0]), ' still had negative spin; we set these to 0 ')
+        self.spinM1[self.spinM1<0] = np.zeros_like(self.spinM1[self.spinM1<0])
+        self.spinM2[self.spinM2<0] = np.zeros_like(self.spinM2[self.spinM2<0])
 
 
-        mask_ = (self.spinM1<0)
-        self.spinM1[self.spinM1<0] = np.zeros(np.sum(mask_))
-        mask_ = (self.spinM2<0)
-        self.spinM2[self.spinM2<0] = np.zeros(np.sum(mask_))
-        
-        
+
         return self.spinM1, self.spinM2
-    
-    
 
+    
+    
 
     
     
