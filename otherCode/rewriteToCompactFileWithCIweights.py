@@ -342,7 +342,7 @@ def reduceH5file(pathToData, pathToDataWithoutCOMPASname, DCOtype, optimistic, B
                         Data.PerSystemPerRedshift_ratesIntrinsic[ind_zz,:] * Data.COMPAS.weight
 
                         zz = Redshifts[ind_zz]
-                        zz=np.round(zz,3)
+                        zz=np.round(zz,4)
 
                         # append total observed rate (integrated over redshift horizon LIGO/VIRGO/KAGRA)
                         Rdetxyz = RdetPerRedshift.create_dataset(u"R_%s_z_%s"%(mssfrName,zz), data=np.sum(weightsDet_zz))
