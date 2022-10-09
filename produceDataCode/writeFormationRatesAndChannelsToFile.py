@@ -290,7 +290,7 @@ if INITIALIZE == True:
 
 print('do not forget to first Initialize if this is the first time you run this script')
 
-nModels=15
+nModels=20
 BPSnameslist = list(string.ascii_uppercase)[0:nModels]
 modelDirList = ['fiducial', 'massTransferEfficiencyFixed_0_25', 'massTransferEfficiencyFixed_0_5', 'massTransferEfficiencyFixed_0_75', \
                'unstableCaseBB', 'alpha0_5', 'alpha2_0', 'fiducial', 'rapid', 'maxNSmass2_0', 'maxNSmass3_0', 'noPISN',  'ccSNkick_100km_s', 'ccSNkick_30km_s', 'noBHkick' ]
