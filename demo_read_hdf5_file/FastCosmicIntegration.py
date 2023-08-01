@@ -308,7 +308,7 @@ def find_detection_probability(Mc, eta, redshifts, distances, n_redshifts_detect
     return detection_probability
 
 def find_detection_rate(path, dco_type="BBH", merger_output_filename=None, weight_column=None,
-                        merges_hubble_time=True, pessimistic_CEE=True, no_RLOF_after_CEE=True,
+                        merges_hubble_time=False, pessimistic_CEE=True, no_RLOF_after_CEE=False,
                         max_redshift=10.0, max_redshift_detection=1.0, redshift_step=0.001, z_first_SF = 10,
                         use_sampled_mass_ranges=True, m1_min=5 * u.Msun, m1_max=150 * u.Msun, m2_min=0.1 * u.Msun, fbin=0.7,
                         aSF = 0.01, bSF = 2.77, cSF = 2.90, dSF = 4.70,
@@ -412,6 +412,7 @@ def find_detection_rate(path, dco_type="BBH", merger_output_filename=None, weigh
     if snr_step > 1.0:
         warnings.warn("SNR step is greater than 1.0, large step sizes can produce unpredictable results", stacklevel=2)
 
+    print('path=', path)
     # start by getting the necessary data from the COMPAS file
     COMPAS = ClassCOMPAS.COMPASData(path, Mlower=m1_min, Mupper=m1_max, m2_min=m2_min, binaryFraction=fbin, suppress_reminder=True)
     COMPAS.setCOMPASDCOmask(types=dco_type, withinHubbleTime=merges_hubble_time, pessimistic=pessimistic_CEE, noRLOFafterCEE=no_RLOF_after_CEE)
@@ -420,6 +421,7 @@ def find_detection_rate(path, dco_type="BBH", merger_output_filename=None, weigh
     m1=COMPAS.get_COMPAS_variables("systems","mass1");
     m2=COMPAS.get_COMPAS_variables("systems","mass2");
     print('m1', 'm2', m1, '\n', m2)
+
     if use_sampled_mass_ranges:
         COMPAS.Mlower=min(m1[m1!=m2])*u.Msun    # the m1!=m2 ensures we don't include masses set equal through RLOF at ZAMS
         COMPAS.Mupper=max(m1)*u.Msun
@@ -445,7 +447,7 @@ def find_detection_rate(path, dco_type="BBH", merger_output_filename=None, weigh
     # Average_SF_mass_needed = (COMPAS.mass_evolved_per_binary * COMPAS.n_systems)  ## UNDO THIS WHEN USING OTHer SIMULATIONS //floor 
     # print('Average_SF_mass_needed = ', Average_SF_mass_needed) # print this, because it might come in handy to know when writing up results :)  ## UNDO THIS WHEN USING OTHer SIMULATIONS //floor 
     # n_formed = sfr / Average_SF_mass_needed # Divide the star formation rate density by the representative SF mass  ## UNDO THIS WHEN USING OTHer SIMULATIONS //floor 
-    n_formed = sfr / 5413447143 # Fixed for 1E6 * 53 Binaries representing simulations used for BHNS & BNS projects // floor //floor 
+    n_formed = sfr / 5413447143 # Fixed for 1E6 * 53 Binaries representing simulations used for BBH, BHNS & BNS projects // floor //floor 
 
 
     # work out the metallicity distribution at each redshift and probability of drawing each metallicity in COMPAS
@@ -491,7 +493,7 @@ def find_detection_rate(path, dco_type="BBH", merger_output_filename=None, weigh
 
 
 def append_rates(path, detection_rate, formation_rate, merger_rate, redshifts, COMPAS, n_redshifts_detection,
-    maxz=1., sensitivity="O1", dco_type="BHBH", mu0=0.035, muz=-0.23, sigma0=0.39, sigmaz=0., alpha=0.,
+    maxz_append=1., sensitivity="O1", dco_type="BHBH", mu0=0.035, muz=-0.23, sigma0=0.39, sigmaz=0., alpha=0.,
     append_binned_by_z = False, redshift_binsize=0.1):
     """
         Append the formation rate, merger rate, detection rate and redshifts as a new group to your COMPAS output with weights hdf5 file
@@ -505,7 +507,7 @@ def append_rates(path, detection_rate, formation_rate, merger_rate, redshifts, C
             COMPAS                 --> [Object]         Relevant COMPAS data in COMPASData Class
             n_redshifts_detection  --> [int]            Number of redshifts in list that should be used to calculate detection rates
 
-            maxz                   --> [float] Maximum redshhift up to where we would like to store the data
+            maxz_append            --> [float] Maximum redshhift up to where we would like to store the data // floor //floor 
             sensitivity            --> [string] Which detector sensitivity you used to calculate rates 
             dco_type               --> [string] Which DCO type you used to calculate rates 
             mu0                    --> [float]  metallicity dist: expected value at redshift 0
@@ -597,14 +599,15 @@ def append_rates(path, detection_rate, formation_rate, merger_rate, redshifts, C
         else: 
             #  To avoid huge filesizes, we don't really wan't All the data, 
             # so we're going to save up to some redshift
-            z_index = np.digitize(maxz, redshifts) -1
+            # maxz=10
+            z_index = np.digitize(maxz_append, redshifts) -1 # find index for max redshift to append within redshift bins
 
             # The detection_rate is a smaller array, make sure you don't go beyond the end
             detection_index = z_index if z_index < n_redshifts_detection else n_redshifts_detection
 
-            print('You will only save data up to redshift ', maxz, ', i.e. index', z_index)
+            print('You will only save data up to redshift ', maxz_append, ', i.e. index', z_index) 
             save_redshifts        = redshifts
-            save_merger_rate      = merger_rate[:,:z_index]
+            save_merger_rate      = merger_rate[:,:z_index+1] ##// Floor: add +1 to also include the last index 
             save_detection_rate   = detection_rate[:,:detection_index]
 
         print('save_redshifts', save_redshifts)
@@ -613,10 +616,12 @@ def append_rates(path, detection_rate, formation_rate, merger_rate, redshifts, C
         # Write the rates as a seperate dataset
         # re-arrange your list of rate parameters
         DCO_to_rate_mask     = COMPAS.DCOmask #save this bool for easy conversion between BSE_Double_Compact_Objects, and CI weights
+        print('len DCOmask=', len(DCO_to_rate_mask))
+        print('sum DCOmask=', np.sum(DCO_to_rate_mask))
         rate_data_list       = [DCO['seed'][DCO_to_rate_mask], DCO_to_rate_mask , save_redshifts,  save_merger_rate, merger_rate[:,0], save_detection_rate]
         rate_list_names      = ['SEED', 'DCOmask', 'redshifts',  'merger_rate','merger_rate_z0', 'detection_rate'+sensitivity]
         for i, data in enumerate(rate_data_list):
-            print('Adding rate info of shape', np.shape(data))
+            print('Adding rate info of shape', np.shape(data), 'for %s'%rate_list_names[i]) # // floor added to print the names of the shape arrays 
             # Check if dataset exists, if so, just delete it
             if rate_list_names[i] in h_new[new_rate_group].keys():
                 del h_new[new_rate_group][rate_list_names[i]]
@@ -778,7 +783,7 @@ if __name__ == "__main__":
     parser.add_argument("--m1min", dest= 'm1_min',  help="Minimum primary mass sampled by COMPAS",type=float, default=5.) 
     parser.add_argument("--m1max", dest= 'm1_max',  help="Maximum primary mass sampled by COMPAS",type=float, default=150.) 
     parser.add_argument("--m2min", dest= 'm2_min',  help="Minimum secondary mass sampled by COMPAS",type=float, default=0.1) 
-    parser.add_argument("--fbin", dest= 'fbin',  help="Binary fraction used by COMPAS",type=float, default=0.7) 
+    parser.add_argument("--fbin", dest= 'fbin',  help="Binary fraction used by COMPAS",type=float, default=1) 
 
     # Parameters determining dP/dZ and SFR(z), default options from Neijssel 2019
     parser.add_argument("--mu0", dest= 'mu0',  help="mean metallicity at redshhift 0",type=float, default=0.035)
@@ -794,7 +799,7 @@ if __name__ == "__main__":
      # Options for the redshift evolution and detector sensitivity
     parser.add_argument("--dontAppend", dest= 'append_rates',  help="Prevent the script from appending your rates to the hdf5 file.", action='store_false', default=True)
     parser.add_argument("--delete", dest= 'delete_rates',  help="Delete the rate group from your hdf5 output file (groupname based on dP/dZ parameters)", action='store_true', default=False)
-
+    parser.add_argument("--maxz_append", dest= 'maxz_append',  help="Maximum redshhift up to where we would like to store the data",type=float, default=1)
     args = parser.parse_args()
 
     #####################################
@@ -817,7 +822,7 @@ if __name__ == "__main__":
     if args.append_rates:
         n_redshifts_detection = int(args.max_redshift_detection / args.redshift_step)
         append_rates(args.path, detection_rate, formation_rate, merger_rate, redshifts, COMPAS, n_redshifts_detection,
-            maxz=args.max_redshift_detection, sensitivity=args.sensitivity, dco_type=args.dco_type, mu0=args.mu0, muz=args.muz, sigma0=args.sigma0, sigmaz=args.sigmaz, alpha=args.alpha,
+            maxz_append=args.maxz_append, sensitivity=args.sensitivity, dco_type=args.dco_type, mu0=args.mu0, muz=args.muz, sigma0=args.sigma0, sigmaz=args.sigmaz, alpha=args.alpha,
             append_binned_by_z = False, redshift_binsize=0.05)
 
     # or just delete this group if your hdf5 file is getting too big
