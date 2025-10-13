@@ -99,8 +99,26 @@ class COMPASData(object):
             #we define it as a system that should not have survived the CEE
             maskNoRLOFafterCEE =  (fDCO['RLOFSecondaryAfterCEE'][...].squeeze()==False)
                               
+            # print('using this updated DCO mask with immediateRLOFAfterCEE')
+            # add this code to remove systems with immediate RLOF after CE 
+            # immediateRLOFAfterCEE = self.h5file["commonEnvelopes"]["immediateRLOFAfterCEE"][...].squeeze()
+            # not_immediateRLOFAfterCEEmask = (immediateRLOFAfterCEE==0)
+            # CErandomSeed = self.h5file["commonEnvelopes"]["randomSeed"][...].squeeze()
 
+            # we do *not* want the immediateRLOFafterCEE systems 
+            # DCOsizedmask_withoutImmediateRLOFAfterCEE = np.in1d(fDCO['seed'][...].squeeze(), CErandomSeed[not_immediateRLOFAfterCEEmask])
+            # del CErandomSeed
+            # del not_immediateRLOFAfterCEEmask
+            # del immediateRLOFAfterCEE
+
+            
+            # combine the different masks and the oratory and refinement masks
+            # combinedmask = mask0 * mask1 * mask2 * mask3 #* DCOsizedmask_withImmediateRLOFAfterCEE
+
+            # combinedmask = combinedmask.squeeze() * DCOsizedmask_withoutImmediateRLOFAfterCEE
             self.DCOmask = maskTypes & maskHubble & maskOptimistic & maskNoRLOFafterCEE
+            # self.DCOmask = tempDCOmask.squeeze() * DCOsizedmask_withoutImmediateRLOFAfterCEE
+
 
     def setGridAndMassEvolved(self):
     
