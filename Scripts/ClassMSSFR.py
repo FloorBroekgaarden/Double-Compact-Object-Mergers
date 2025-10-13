@@ -613,7 +613,7 @@ class MSSFR(object):
         return fraction
 
 
-    def returnMSSFR(self, lowerBinNr=None, agesBirth=None, redshiftBirth=None):
+    def returnMSSFR(self, lowerBinNr=None, agesBirth=None, redshiftBirth=None, z_form=None, t_form_from_z=None):
         """
         This is the main function called in the cosmic integration routine.
 
@@ -630,6 +630,10 @@ class MSSFR(object):
         #independent of metallicity so we can do all at once
         SFR        = np.zeros(len(agesBirth))
         SFR[mask]  = self.returnSFR(redshiftBirth[mask], agesBirth[mask])
+
+        SFR_form        = np.zeros(len(agesBirth))
+        SFR_form  = self.returnSFR(z_form, t_form_from_z)
+
         #The calculation of the fraction is done such that it does 
         #a single metallicity bin at the time
         fractions = np.zeros(len(agesBirth))
@@ -638,8 +642,10 @@ class MSSFR(object):
         Zupper = self.metallicityBinEdges[lowerBinNr+1]
         if self.Zprescription == 'MZ_GSMF':
             fractions[mask] = self.returnFractionMZ_GSMF(Zlower, Zupper, redshiftBirth[mask])
+            fractions_form  = self.returnFractionMZ_GSMF(Zlower, Zupper, z_form) #// floor_zform
         elif self.Zprescription == 'logNormal':
             fractions[mask] = self.returnFractionLogNormal(Zlower, Zupper, redshiftBirth[mask])
+            fractions_form  = self.returnFractionLogNormal(Zlower, Zupper, z_form) #// floor_zform
         else:
             raise ValueError("self.Zprescription not recognized, MZ_GSMF or logNormal?")
         #Always raise an error if the fraction is unphysical
@@ -648,7 +654,8 @@ class MSSFR(object):
         #i.e. if system is born before first star formation (z=-1)
         #we set the rate to zero
         MSSFR  = np.multiply(SFR, fractions)
-        return MSSFR
+        MSSFR_form = np.multiply(SFR_form, fractions_form)
+        return MSSFR, MSSFR_form
 
 
 
