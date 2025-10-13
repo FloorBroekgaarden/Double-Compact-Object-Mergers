@@ -62,6 +62,7 @@ class CosmicIntegrator(object):
         if Cosmology == 'Custom Flat':
             self.cosmology            = FlatLambdaCDM(H0=hubbleConstant *\
                                         u.km / u.s / u.Mpc, Om0=omegaMatter)
+
         self.redshiftFirstSFR         = redshiftFirstSFR
         self.ageFirstSFR              = self.cosmology.age(self.redshiftFirstSFR).value
         
@@ -138,6 +139,8 @@ class CosmicIntegrator(object):
         self.PerSystemPerRedshift_redshiftBirth  = None
         # dN Gpc-3 per year at z=redshift.     #each row is redshift merger
         self.PerSystemPerRedshift_ratesIntrinsic = None
+        # dN Gpc-3 per year at z=redshift formation weights 
+        self.PerSystemPerRedshift_formationIntrinsic  = None
         # dN per year in detector from shell 
         self.PerSystemPerRedshift_ratesObserved  = None
 
@@ -247,12 +250,11 @@ class CosmicIntegrator(object):
             self.setRedshiftBirthSystems()
             if self.verbose:
                 print("creating 2D array with intrinsic and observed rate to be calculated")
+            self.PerSystemPerRedshift_formationIntrinsic = np.zeros(shape=(int(self.nrRedshiftBins), len(self.COMPAS.delayTimes))) # // floor_zbirth 
              # dN Gpc-3 per year at z=redshift.     #each row is redshift merger
-            self.PerSystemPerRedshift_ratesIntrinsic = np.zeros(shape=(int(self.nrRedshiftBins),\
-                                                                len(self.COMPAS.delayTimes)))
+            self.PerSystemPerRedshift_ratesIntrinsic     = np.zeros(shape=(int(self.nrRedshiftBins), len(self.COMPAS.delayTimes)))
             # dN per year in detector from shell 
-            self.PerSystemPerRedshift_ratesObserved  = np.zeros(shape=(int(self.nrRedshiftBins),\
-                                                                len(self.COMPAS.delayTimes)))    
+            self.PerSystemPerRedshift_ratesObserved      = np.zeros(shape=(int(self.nrRedshiftBins), len(self.COMPAS.delayTimes)))    
         else:
             print()
             print("cannot set 2D-array of rates")
@@ -265,6 +267,8 @@ class CosmicIntegrator(object):
         #For each row in 2D array wich corresponds to a merger redshift
         # Get birth Age in Gyr , redshifts birth, and metallicities from COMPAS
         #Calcultate MSSFR for that row and fill in the answer
+
+
         for nr in range(int(self.nrRedshiftBins)):
             for nrZ, Z in enumerate(self.COMPAS.metallicityGrid):
                 maskZ    = self.COMPAS.metallicitySystems == Z
@@ -274,11 +278,19 @@ class CosmicIntegrator(object):
                 # print('end')
                 # print()
 
-                MSSFR  = self.MSSFR.returnMSSFR(lowerBinNr=nrZ,\
+
+                z_form_per_system_fixz = self.Shell_centerRedshift[nr]*np.ones_like(self.PerSystemPerRedshift_ageBirth[nr][maskZ])
+                t_form_from_z = self.cosmology.age(self.Shell_centerRedshift[nr]).value*np.ones_like(self.PerSystemPerRedshift_ageBirth[nr][maskZ])
+
+
+                MSSFR, MSSFR_form  = self.MSSFR.returnMSSFR(lowerBinNr=nrZ,\
                                                   agesBirth=self.PerSystemPerRedshift_ageBirth[nr][maskZ],
-                                                  redshiftBirth=self.PerSystemPerRedshift_redshiftBirth[nr][maskZ])
-                RatesZ   = np.divide(MSSFR, self.COMPAS.totalMassEvolvedPerZ[nrZ])
+                                                  redshiftBirth=self.PerSystemPerRedshift_redshiftBirth[nr][maskZ], z_form=z_form_per_system_fixz, t_form_from_z=t_form_from_z)
+                RatesZ        = np.divide(MSSFR,      self.COMPAS.totalMassEvolvedPerZ[nrZ])
+                RatesZ_form   = np.divide(MSSFR_form, self.COMPAS.totalMassEvolvedPerZ[nrZ]) 
+
                 self.PerSystemPerRedshift_ratesIntrinsic[nr][maskZ] = RatesZ   # intrinric dN Gpc-3 per year at z=redshift.
+                self.PerSystemPerRedshift_formationIntrinsic[nr][maskZ]    = RatesZ_form   # intrinric dN Gpc-3 per year at z=redshift formation.
 
 
                 probObservingZ     = selection_effects.detection_probability(\
@@ -288,6 +300,10 @@ class CosmicIntegrator(object):
                 NrMergersInShell  = np.multiply(RatesZ,self.Shell_volume[nr])                    # intrinsic rate per system per shell
                 NrMergersInShell  = NrMergersInShell * (1./(1.+self.Shell_centerRedshift[nr])) # rate observer frame per system per shell
                 self.PerSystemPerRedshift_ratesObserved[nr][maskZ]  = np.multiply(NrMergersInShell,probObservingZ)      # observed  dN per year prob between 0-1 
+
+                # print('total mass evolved, metallicities: ', self.COMPAS.totalMassEvolvedPerZ)
+
+
         if np.sum(self.PerSystemPerRedshift_ratesObserved[-1]) != 0 :
             print("The detected rate of the outermost redshift shell is nonzero, did we integrate far enough?")
 
